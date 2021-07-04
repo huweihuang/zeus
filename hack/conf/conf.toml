@@ -1,0 +1,23 @@
+Host = "0.0.0.0"
+Port = 8080
+WorkerNum = 10000
+
+[Log]
+LogFile = "/data/gin-api-frame/log/gin-api-frame.log"
+# BackTrackLevel = "debug"
+LogLevel = "debug"
+LogFormat = "text"
+EnableForceColors = true
+
+[Database]
+User = "root"
+Password = "xxx"
+Addr = "1.1.1.1:8080"
+DBName = "instance"
+
+[EtcdConfig]
+Endpoints = "https://127.0.0.1:2379"
+CertFile = "/path/etcd-client.crt"
+KeyFile = "/path/etcd-client.key"
+CAFile = "/path/ca.crt"
+JobQueueKey = "prefix"

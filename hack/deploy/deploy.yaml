@@ -1,0 +1,110 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gin-api-frame-conf
+  namespace: gin
+data:
+  gin-api-frame.conf: |-
+    Host = "0.0.0.0"
+    Port = 8080
+    Worker = 10000
+
+    [Log]
+    LogFile = "/data/gin-api-frame/log/gin-api-frame.log"
+    # BackTrackLevel = "debug"
+    LogLevel = "debug"
+    LogFormat = "text"
+    EnableForceColors = true
+
+    [Database]
+    User = "gin"
+    Password = "xxx"
+    Addr = "xxx:8080"
+    DBName = "gin"
+
+    [EtcdConfig]
+    Endpoints = "https://etcd-gin:2379"
+    CertFile = "/opt/etcd/certs/client/etcd-client.crt"
+    KeyFile = "/opt/etcd/certs/client/etcd-client.key"
+    CAFile = "/opt/etcd/certs/client/etcd-ca.crt"
+    JobQueueKey = "/gin/apiserver/job/queue"
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: gin-api-frame
+  name: gin-api-frame
+  namespace: gin
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      k8s-app: gin-api-frame
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        k8s-app: gin-api-frame
+    spec:
+      containers:
+        - image: registry.cn-hangzhou.aliyuncs.com/huweihuang/gin-api-frame:latest
+          command:
+            - /gin-api-frame
+            - -c
+            - /usr/local/gin-api-frame/conf/gin-api-frame.conf
+          imagePullPolicy: Always
+          name: gin-api-frame
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: "1"
+              memory: 1Gi
+          volumeMounts:
+            - mountPath: /usr/local/gin-api-frame/conf
+              name: gin-api-frame-conf
+            - mountPath: /opt/etcd/certs/client/
+              name: etcd-client-certs
+            - mountPath: /data/gin-api-frame
+              name: data
+      restartPolicy: Always
+      volumes:
+        - name: gin-api-frame-conf
+          configMap:
+            defaultMode: 511
+            name: gin-api-frame-conf
+        - name: etcd-client-certs
+          secret:
+            defaultMode: 256
+            secretName: etcd-gin-client-certs
+        - name: data
+          hostPath:
+            path: /data/gin-api-frame
+            type: DirectoryOrCreate
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gin-api-frame-svc
+  namespace: gin
+spec:
+  ports:
+    - name: gin-api-frame-port
+      nodePort: 32000
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    k8s-app: gin-api-frame
+  type: NodePort
