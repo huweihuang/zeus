@@ -42,10 +42,16 @@ func (s *apiserver) Run() error {
 		return err
 	}
 
-	addr := fmt.Sprintf("%s:%d", s.conf.Host, s.conf.Port)
+	addr := fmt.Sprintf("%s:%d", s.conf.Server.Host, s.conf.Server.Port)
 	server := s.setupServer(log.Logger)
-	go server.Run(addr)
-	log.Logger.Infof("Server listening at %s", addr)
+	if s.conf.Server.CertFile != "" && s.conf.Server.KeyFile != "" {
+		go server.RunTLS(addr, s.conf.Server.CertFile, s.conf.Server.KeyFile)
+		log.Logger.Infof("Server listening at https://%s", addr)
+	} else {
+		go server.Run(addr)
+		log.Logger.Infof("Server listening at http://%s", addr)
+	}
+
 	<-shutdown
 
 	if err := model.Close(); err != nil {
@@ -69,10 +75,10 @@ func setupDB(dbConf *config.DBConfig) error {
 }
 
 func setLogger(shutdown chan struct{}, conf *config.Config) *logrus.Logger {
-	logger := log.InitLogger(conf.LogConfig.LogFile, conf.LogConfig.LogLevel, conf.LogConfig.BackTrackLevel, conf.LogConfig.LogFormat,
-		conf.LogConfig.EnableForceColors)
+	logger := log.InitLogger(conf.Log.LogFile, conf.Log.LogLevel, conf.Log.BackTrackLevel, conf.Log.LogFormat,
+		conf.Log.EnableForceColors)
 	registerSignal(shutdown, func() {
-		log.ReopenLogs(conf.LogConfig.LogFile, logger)
+		log.ReopenLogs(conf.Log.LogFile, logger)
 	})
 	return logger
 }

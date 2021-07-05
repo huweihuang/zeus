@@ -69,7 +69,7 @@ func TestUpdateInstanceStatus(t *testing.T) {
 
 func TestUpdateInstanceImage(t *testing.T) {
 	TestSetupDB(t)
-	err := UpdateInstanceImage(insName, "ccr.ccs.tencentyun.com/pcdn/fog_lego_server:k8s_test_2")
+	err := UpdateInstanceImage(insName, "xxxx")
 	if err != nil {
 		t.Errorf("test failed: %v", err)
 	} else {

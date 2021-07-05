@@ -1,6 +1,8 @@
+[Server]
 Host = "0.0.0.0"
 Port = 8080
-WorkerNum = 10000
+CertFile=""
+KeyFile=""
 
 [Log]
 LogFile = "/data/gin-api-frame/log/gin-api-frame.log"
@@ -12,10 +14,10 @@ EnableForceColors = true
 [Database]
 User = "root"
 Password = "xxx"
-Addr = "1.1.1.1:8080"
+Addr = "127.0.0.1:3600"
 DBName = "instance"
 
-[EtcdConfig]
+[Etcd]
 Endpoints = "https://127.0.0.1:2379"
 CertFile = "/path/etcd-client.crt"
 KeyFile = "/path/etcd-client.key"
