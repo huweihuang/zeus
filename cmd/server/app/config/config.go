@@ -9,15 +9,21 @@ import (
 
 // General configuration
 type Config struct {
-	Host       string
-	Port       int
-	Worker     int
-	LogConfig  LogConfig
-	Database   DBConfig
-	EtcdConfig EtcdConfig
+	Server   ServerConfig
+	Log      LogConfig
+	Database DBConfig
+	Etcd     EtcdConfig
 }
 
-// LogConfig config
+// http server config
+type ServerConfig struct {
+	Host     string
+	Port     int
+	CertFile string
+	KeyFile  string
+}
+
+// Log config
 type LogConfig struct {
 	LogFile           string
 	LogLevel          string

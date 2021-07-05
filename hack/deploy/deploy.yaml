@@ -5,9 +5,11 @@ metadata:
   namespace: gin
 data:
   gin-api-frame.conf: |-
+    [Server]
     Host = "0.0.0.0"
     Port = 8080
-    Worker = 10000
+    CertFile=""
+    KeyFile=""
 
     [Log]
     LogFile = "/data/gin-api-frame/log/gin-api-frame.log"
@@ -19,10 +21,10 @@ data:
     [Database]
     User = "gin"
     Password = "xxx"
-    Addr = "xxx:8080"
+    Addr = "127.0.0.1:3600"
     DBName = "gin"
 
-    [EtcdConfig]
+    [Etcd]
     Endpoints = "https://etcd-gin:2379"
     CertFile = "/opt/etcd/certs/client/etcd-client.crt"
     KeyFile = "/opt/etcd/certs/client/etcd-client.key"
