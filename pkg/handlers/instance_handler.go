@@ -1,4 +1,4 @@
-package handler
+package handlers
 
 import (
 	"fmt"
@@ -11,8 +11,18 @@ import (
 	"github.com/huweihuang/gin-api-frame/pkg/validation"
 )
 
+type InstanceHandler struct {
+	service *service.InstanceService
+}
+
+func newInstanceHandler() *InstanceHandler {
+	return &InstanceHandler{
+		service: service.NewInstanceService(),
+	}
+}
+
 // 创建实例
-func CreateInstance(c *gin.Context) {
+func (h *InstanceHandler) CreateInstance(c *gin.Context) {
 	instance := c.MustGet(instanceReqCtx).(types.Instance)
 	errs := validation.ValidateCreateInstance(&instance)
 	if len(errs) != 0 {
@@ -20,8 +30,7 @@ func CreateInstance(c *gin.Context) {
 		return
 	}
 
-	ic := c.MustGet(ControllerCtx).(service.InstanceInterface)
-	err := ic.CreateInstance(&instance)
+	err := h.service.CreateInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
 			notFoundWrapper(c, "instance", map[string]interface{}{"error": err.Error()})
@@ -35,7 +44,7 @@ func CreateInstance(c *gin.Context) {
 }
 
 // 更新实例
-func UpdateInstance(c *gin.Context) {
+func (h *InstanceHandler) UpdateInstance(c *gin.Context) {
 	instance := c.MustGet(instanceReqCtx).(types.Instance)
 	errs := validation.ValidateUpdateInstance(&instance)
 	if len(errs) != 0 {
@@ -43,8 +52,7 @@ func UpdateInstance(c *gin.Context) {
 		return
 	}
 
-	ic := c.MustGet(ControllerCtx).(service.InstanceInterface)
-	err := ic.UpdateInstance(&instance)
+	err := h.service.UpdateInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
 			notFoundWrapper(c, "instance", map[string]interface{}{"error": err.Error()})
@@ -58,7 +66,7 @@ func UpdateInstance(c *gin.Context) {
 }
 
 // 查询实例任务创建结果
-func GetInstance(c *gin.Context) {
+func (h *InstanceHandler) GetInstance(c *gin.Context) {
 	name := c.Query("name")
 
 	if name == "" {
@@ -69,8 +77,7 @@ func GetInstance(c *gin.Context) {
 	instance := types.Instance{}
 	instance.Name = name
 
-	ic := c.MustGet(ControllerCtx).(service.InstanceInterface)
-	e, err := ic.GetInstance(&instance)
+	e, err := h.service.GetInstance(&instance)
 	if err != nil {
 		if err == errors.ErrJobNotFound {
 			data := map[string]string{
@@ -86,7 +93,7 @@ func GetInstance(c *gin.Context) {
 }
 
 // 删除实例
-func DeleteInstance(c *gin.Context) {
+func (h *InstanceHandler) DeleteInstance(c *gin.Context) {
 	instance := c.MustGet(instanceReqCtx).(types.Instance)
 	errs := validation.ValidateDeleteInstance(&instance)
 	if len(errs) != 0 {
@@ -94,8 +101,7 @@ func DeleteInstance(c *gin.Context) {
 		return
 	}
 
-	ic := c.MustGet(ControllerCtx).(service.InstanceInterface)
-	err := ic.DeleteInstance(&instance)
+	err := h.service.DeleteInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
 			notFoundWrapper(c, "instance", instance)
