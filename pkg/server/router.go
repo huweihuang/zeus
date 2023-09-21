@@ -3,16 +3,16 @@ package server
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/huweihuang/gin-api-frame/pkg/controller"
 	"github.com/huweihuang/gin-api-frame/pkg/handler"
-	"github.com/huweihuang/gin-api-frame/pkg/util/log"
+	"github.com/huweihuang/gin-api-frame/pkg/service"
+	log "github.com/huweihuang/golib/logger/logrus"
 )
 
 var (
-	InsCtrl controller.InstanceInterface
+	InsCtrl service.InstanceInterface
 )
 
-func (s *apiserver) setupRoutes() {
+func (s *Server) setupRoutes() {
 	s.gin.Use(RegisterController)
 	group := s.gin.Group("/api/v1")
 	// instance
@@ -26,8 +26,7 @@ func (s *apiserver) setupRoutes() {
 
 // 注册controller
 func RegisterController(c *gin.Context) {
-	logger := log.InitHttpLogger(c)
-	logger.Debug("register controller")
-	InsCtrl = controller.NewInstanceController()
+	log.Logger.Debug("register controller")
+	InsCtrl = service.NewInstanceService()
 	c.Set(handler.ControllerCtx, InsCtrl)
 }

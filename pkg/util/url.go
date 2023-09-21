@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/huweihuang/gin-api-frame/pkg/util/log"
+	log "github.com/huweihuang/golib/logger/logrus"
 )
 
 // URL调用封装工具

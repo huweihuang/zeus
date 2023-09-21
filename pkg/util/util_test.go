@@ -5,11 +5,11 @@ import (
 
 	"github.com/huweihuang/gin-api-frame/pkg/constant"
 	"github.com/huweihuang/gin-api-frame/pkg/types"
-	"github.com/huweihuang/gin-api-frame/pkg/util/log"
+	log "github.com/huweihuang/golib/logger/logrus"
 )
 
 func init() {
-	log.InitLogger("", "debug", "", "text", false)
+	log.InitLogger("", "debug", "text", true, false)
 }
 
 func TestPrintObjectJson(t *testing.T) {

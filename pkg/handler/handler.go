@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/huweihuang/gin-api-frame/pkg/controller"
 	"github.com/huweihuang/gin-api-frame/pkg/errors"
+	"github.com/huweihuang/gin-api-frame/pkg/service"
 	"github.com/huweihuang/gin-api-frame/pkg/types"
 	"github.com/huweihuang/gin-api-frame/pkg/validation"
 )
@@ -20,7 +20,7 @@ func CreateInstance(c *gin.Context) {
 		return
 	}
 
-	ic := c.MustGet(ControllerCtx).(controller.InstanceInterface)
+	ic := c.MustGet(ControllerCtx).(service.InstanceInterface)
 	err := ic.CreateInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
@@ -43,7 +43,7 @@ func UpdateInstance(c *gin.Context) {
 		return
 	}
 
-	ic := c.MustGet(ControllerCtx).(controller.InstanceInterface)
+	ic := c.MustGet(ControllerCtx).(service.InstanceInterface)
 	err := ic.UpdateInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
@@ -69,7 +69,7 @@ func GetInstance(c *gin.Context) {
 	instance := types.Instance{}
 	instance.Name = name
 
-	ic := c.MustGet(ControllerCtx).(controller.InstanceInterface)
+	ic := c.MustGet(ControllerCtx).(service.InstanceInterface)
 	e, err := ic.GetInstance(&instance)
 	if err != nil {
 		if err == errors.ErrJobNotFound {
@@ -94,7 +94,7 @@ func DeleteInstance(c *gin.Context) {
 		return
 	}
 
-	ic := c.MustGet(ControllerCtx).(controller.InstanceInterface)
+	ic := c.MustGet(ControllerCtx).(service.InstanceInterface)
 	err := ic.DeleteInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {

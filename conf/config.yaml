@@ -1,0 +1,16 @@
+server:
+  host: "0.0.0.0"
+  port: 80
+  cert_file: ""
+  key_file: ""
+log:
+  log_file: "/data/gin-api-frame/log/gin-api-frame.log"
+  log_level: "debug"
+  log_format: "text"
+  enable_force_colors: true
+database:
+  user: ""
+  password: ""
+  addr: ""
+  db_name: ""
+  log_level: ""
