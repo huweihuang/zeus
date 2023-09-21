@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 
-	"github.com/go-sql-driver/mysql"
 	"github.com/spf13/viper"
 
 	log "github.com/huweihuang/golib/logger/logrus"
@@ -52,20 +51,6 @@ type EtcdConfig struct {
 	KeyFile     string
 	CAFile      string
 	JobQueueKey string
-}
-
-// FormatDSN formats the given Config into a DSN string which can be passed to the driver.
-func FormatDSN(dbConf *DBConfig) string {
-	cfg := mysql.Config{
-		User:                 dbConf.User,
-		Passwd:               dbConf.Password,
-		Net:                  "tcp",
-		Addr:                 dbConf.Addr,
-		DBName:               dbConf.DBName,
-		ParseTime:            true,
-		AllowNativePasswords: true,
-	}
-	return cfg.FormatDSN()
 }
 
 func InitConfig(configPath string) (*Config, error) {

@@ -10,7 +10,7 @@ type InstanceService struct {
 }
 
 // 初始化一个控制器
-func NewInstanceService() InstanceInterface {
+func NewInstanceService() *InstanceService {
 	return &InstanceService{}
 }
 

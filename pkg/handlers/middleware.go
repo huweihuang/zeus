@@ -1,4 +1,4 @@
-package handler
+package handlers
 
 import (
 	"fmt"
@@ -15,7 +15,6 @@ import (
 )
 
 const (
-	ControllerCtx  = "controllerCtx"
 	instanceReqCtx = "instanceReq"
 )
 
