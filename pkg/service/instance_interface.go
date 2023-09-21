@@ -1,4 +1,4 @@
-package controller
+package service
 
 import (
 	"github.com/huweihuang/gin-api-frame/pkg/types"

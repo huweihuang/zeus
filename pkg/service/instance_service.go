@@ -1,4 +1,4 @@
-package controller
+package service
 
 import (
 	"github.com/huweihuang/gin-api-frame/pkg/model"
@@ -6,16 +6,16 @@ import (
 )
 
 // 控制器用来批量管理服务
-type InstanceController struct {
+type InstanceService struct {
 }
 
 // 初始化一个控制器
-func NewInstanceController() InstanceInterface {
-	return &InstanceController{}
+func NewInstanceService() InstanceInterface {
+	return &InstanceService{}
 }
 
 // 创建实例
-func (c *InstanceController) CreateInstance(ins *types.Instance) error {
+func (c *InstanceService) CreateInstance(ins *types.Instance) error {
 	err := model.CreateInstance(ins)
 	if err != nil {
 		return err
@@ -24,7 +24,7 @@ func (c *InstanceController) CreateInstance(ins *types.Instance) error {
 }
 
 // 查询实例
-func (c *InstanceController) GetInstance(ins *types.Instance) (*types.Instance, error) {
+func (c *InstanceService) GetInstance(ins *types.Instance) (*types.Instance, error) {
 	ins, err := model.GetInstanceByHostIDAndAppName(ins.Spec.HostID, ins.Name)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func (c *InstanceController) GetInstance(ins *types.Instance) (*types.Instance, 
 }
 
 // 更新实例
-func (c *InstanceController) UpdateInstance(ins *types.Instance) error {
+func (c *InstanceService) UpdateInstance(ins *types.Instance) error {
 	err := model.UpdateInstanceImage(ins.Name, ins.Spec.Image)
 	if err != nil {
 		return err
@@ -42,7 +42,7 @@ func (c *InstanceController) UpdateInstance(ins *types.Instance) error {
 }
 
 // 删除实例
-func (c *InstanceController) DeleteInstance(ins *types.Instance) error {
+func (c *InstanceService) DeleteInstance(ins *types.Instance) error {
 	err := model.DeleteInstance(ins.Name)
 	if err != nil {
 		return err

@@ -11,7 +11,7 @@ import (
 	errConst "github.com/huweihuang/gin-api-frame/pkg/errors"
 	"github.com/huweihuang/gin-api-frame/pkg/types"
 	"github.com/huweihuang/gin-api-frame/pkg/util"
-	"github.com/huweihuang/gin-api-frame/pkg/util/log"
+	log "github.com/huweihuang/golib/logger/logrus"
 )
 
 const (

@@ -1,21 +1,25 @@
 package config
 
 import (
-	"os"
+	"fmt"
 
-	"github.com/BurntSushi/toml"
 	"github.com/go-sql-driver/mysql"
+	"github.com/spf13/viper"
+
+	log "github.com/huweihuang/golib/logger/logrus"
 )
 
-// General configuration
+var ApiConfig *Config
+
+// Config is general configuration
 type Config struct {
-	Server   ServerConfig
-	Log      LogConfig
-	Database DBConfig
-	Etcd     EtcdConfig
+	Server   *ServerConfig
+	Log      *LogConfig
+	Database *DBConfig
+	Etcd     *EtcdConfig
 }
 
-// http server config
+// ServerConfig is http server config
 type ServerConfig struct {
 	Host     string
 	Port     int
@@ -23,21 +27,22 @@ type ServerConfig struct {
 	KeyFile  string
 }
 
-// Log config
+// LogConfig is config for logger
 type LogConfig struct {
-	LogFile           string
-	LogLevel          string
-	BackTrackLevel    string
-	LogFormat         string
-	EnableForceColors bool
+	LogFile            string
+	LogLevel           string
+	LogFormat          string
+	EnableReportCaller bool
+	EnableForceColors  bool
 }
 
-// DB config
+// DBConfig is config for db
 type DBConfig struct {
 	User     string
 	Password string
 	Addr     string
 	DBName   string
+	LogLevel string
 }
 
 // Etcd config
@@ -63,15 +68,17 @@ func FormatDSN(dbConf *DBConfig) string {
 	return cfg.FormatDSN()
 }
 
-// MustLoad parse path generate the config object
-func MustLoad(path string) *Config {
-	_, err := os.Stat(path)
+func InitConfig(configPath string) (*Config, error) {
+	viper.SetConfigFile(configPath)
+	if err := viper.ReadInConfig(); err != nil {
+		return nil, fmt.Errorf("failed to read in config by viper, err: %v", err)
+	}
+
+	err := viper.Unmarshal(ApiConfig)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to unmarshal, err: %v", err)
 	}
-	conf := new(Config)
-	if _, err := toml.DecodeFile(path, conf); err != nil {
-		panic(err)
-	}
-	return conf
+	log.Logger.WithField("config", ApiConfig).Debug("init config")
+
+	return ApiConfig, nil
 }

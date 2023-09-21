@@ -1,41 +1,30 @@
 package model
 
 import (
-	"time"
-
-	"gorm.io/driver/mysql"
+	"github.com/huweihuang/golib/db"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+
+	"github.com/huweihuang/gin-api-frame/cmd/server/app/config"
 )
 
-var engine *gorm.DB
+var DB *gorm.DB
 
-// 数据库初始化
-func SetupDB(dsn string) (err error) {
-	engine, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+func SetupDB(dbConf *config.DBConfig) (*gorm.DB, error) {
+	DB, err := db.SetupDB(dbConf.Addr, dbConf.DBName, dbConf.User, dbConf.Password, dbConf.LogLevel)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	db, err := engine.DB()
-	if err != nil {
-		return err
-	}
-	// Set the maximum lifetime of the connection (less than server setting)
-	db.SetConnMaxLifetime(30 * time.Minute)
-
-	return nil
+	return DB, nil
 }
 
 // 获取数据库引擎
 func GetDB() *gorm.DB {
-	return engine
+	return DB
 }
 
 // 关闭数据库
 func Close() error {
-	db, err := engine.DB()
+	db, err := DB.DB()
 	if err != nil {
 		return err
 	}
