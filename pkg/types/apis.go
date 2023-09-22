@@ -1,6 +1,5 @@
-package apis
+package types
 
-// General response body
 type Response struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`

@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	ware "github.com/huweihuang/golib/gin/middlewares"
 
 	"github.com/huweihuang/gin-api-frame/pkg/errors"
 	"github.com/huweihuang/gin-api-frame/pkg/service"
@@ -33,14 +34,14 @@ func (h *InstanceHandler) CreateInstance(c *gin.Context) {
 	err := h.service.CreateInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
-			notFoundWrapper(c, "instance", map[string]interface{}{"error": err.Error()})
+			ware.NotFoundWrapper(c, "instance", map[string]interface{}{"error": err.Error()})
 			return
 		}
-		errorWrapper(c, "CreateInstance", err)
+		ware.ErrorWrapper(c, "CreateInstance", err)
 		return
 	}
 	data := map[string]string{"jobID": instance.JobID}
-	succeedWrapper(c, "CreateInstance", data)
+	ware.SucceedWrapper(c, "CreateInstance", data)
 }
 
 // 更新实例
@@ -55,14 +56,14 @@ func (h *InstanceHandler) UpdateInstance(c *gin.Context) {
 	err := h.service.UpdateInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
-			notFoundWrapper(c, "instance", map[string]interface{}{"error": err.Error()})
+			ware.NotFoundWrapper(c, "instance", map[string]interface{}{"error": err.Error()})
 			return
 		}
-		errorWrapper(c, "UpdateInstance", err)
+		ware.ErrorWrapper(c, "UpdateInstance", err)
 		return
 	}
 	data := map[string]string{"jobID": instance.JobID}
-	succeedWrapper(c, "UpdateInstance", data)
+	ware.SucceedWrapper(c, "UpdateInstance", data)
 }
 
 // 查询实例任务创建结果
@@ -71,7 +72,7 @@ func (h *InstanceHandler) GetInstance(c *gin.Context) {
 
 	if name == "" {
 		err := fmt.Errorf("name is required")
-		badRequestWrapper(c, err)
+		ware.BadRequestWrapper(c, err)
 		return
 	}
 	instance := types.Instance{}
@@ -83,13 +84,13 @@ func (h *InstanceHandler) GetInstance(c *gin.Context) {
 			data := map[string]string{
 				"name": instance.Name,
 			}
-			notFoundWrapper(c, "jobID", data)
+			ware.NotFoundWrapper(c, "jobID", data)
 			return
 		}
-		errorWrapper(c, "GetInstance", err)
+		ware.ErrorWrapper(c, "GetInstance", err)
 		return
 	}
-	succeedWrapper(c, "GetInstance", e)
+	ware.SucceedWrapper(c, "GetInstance", e)
 }
 
 // 删除实例
@@ -104,12 +105,12 @@ func (h *InstanceHandler) DeleteInstance(c *gin.Context) {
 	err := h.service.DeleteInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
-			notFoundWrapper(c, "instance", instance)
+			ware.NotFoundWrapper(c, "instance", instance)
 			return
 		}
-		errorWrapper(c, "DeleteInstance", err)
+		ware.ErrorWrapper(c, "DeleteInstance", err)
 		return
 	}
 	data := map[string]string{"jobID": instance.JobID}
-	succeedWrapper(c, "DeleteInstance", data)
+	ware.SucceedWrapper(c, "DeleteInstance", data)
 }
