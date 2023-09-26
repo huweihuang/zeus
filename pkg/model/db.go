@@ -4,7 +4,7 @@ import (
 	"github.com/huweihuang/golib/db"
 	"gorm.io/gorm"
 
-	"github.com/huweihuang/gin-api-frame/cmd/server/app/configs"
+	"github.com/huweihuang/zeus/cmd/server/app/configs"
 )
 
 var DB *gorm.DB

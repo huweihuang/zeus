@@ -3,7 +3,7 @@ package validation
 import (
 	"testing"
 
-	"github.com/huweihuang/gin-api-frame/pkg/types"
+	"github.com/huweihuang/zeus/pkg/types"
 )
 
 var (

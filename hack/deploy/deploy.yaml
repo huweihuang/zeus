@@ -1,17 +1,17 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gin-api-frame-conf
+  name: zeus-conf
   namespace: gin
 data:
-  gin-api-frame.conf: |-
+  zeus.conf: |-
     server:
       host: "0.0.0.0"
       port: 80
       cert_file: ""
       key_file: ""
     log:
-      log_file: "/data/gin-api-frame/log/gin-api-frame.log"
+      log_file: "/data/zeus/log/zeus.log"
       log_level: "debug"
       log_format: "text"
       enable_force_colors: true
@@ -29,14 +29,14 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    k8s-app: gin-api-frame
-  name: gin-api-frame
+    k8s-app: zeus
+  name: zeus
   namespace: gin
 spec:
   replicas: 3
   selector:
     matchLabels:
-      k8s-app: gin-api-frame
+      k8s-app: zeus
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -45,16 +45,16 @@ spec:
   template:
     metadata:
       labels:
-        k8s-app: gin-api-frame
+        k8s-app: zeus
     spec:
       containers:
-        - image: registry.cn-hangzhou.aliyuncs.com/huweihuang/gin-api-frame:latest
+        - image: registry.cn-hangzhou.aliyuncs.com/huweihuang/zeus:latest
           command:
-            - /gin-api-frame
+            - /zeus
             - -c
-            - /usr/local/gin-api-frame/conf/gin-api-frame.conf
+            - /usr/local/zeus/conf/zeus.conf
           imagePullPolicy: Always
-          name: gin-api-frame
+          name: zeus
           resources:
             limits:
               cpu: "1"
@@ -63,25 +63,25 @@ spec:
               cpu: "1"
               memory: 1Gi
           volumeMounts:
-            - mountPath: /usr/local/gin-api-frame/conf
-              name: gin-api-frame-conf
+            - mountPath: /usr/local/zeus/conf
+              name: zeus-conf
             - mountPath: /opt/etcd/certs/client/
               name: etcd-client-certs
-            - mountPath: /data/gin-api-frame
+            - mountPath: /data/zeus
               name: data
       restartPolicy: Always
       volumes:
-        - name: gin-api-frame-conf
+        - name: zeus-conf
           configMap:
             defaultMode: 511
-            name: gin-api-frame-conf
+            name: zeus-conf
         - name: etcd-client-certs
           secret:
             defaultMode: 256
             secretName: etcd-gin-client-certs
         - name: data
           hostPath:
-            path: /data/gin-api-frame
+            path: /data/zeus
             type: DirectoryOrCreate
 
 ---
@@ -89,15 +89,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gin-api-frame-svc
+  name: zeus-svc
   namespace: gin
 spec:
   ports:
-    - name: gin-api-frame-port
+    - name: zeus-port
       nodePort: 32000
       port: 8080
       protocol: TCP
       targetPort: 8080
   selector:
-    k8s-app: gin-api-frame
+    k8s-app: zeus
   type: NodePort

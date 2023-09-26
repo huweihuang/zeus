@@ -4,6 +4,6 @@ set -x
 version=$1
 
 # 升级
-kubectl set image deployment/gin-api-frame gin-api-frame=registry.cn-hangzhou.aliyuncs.com/huweihuang/gin-api-frame:${version} -n gin
+kubectl set image deployment/zeus zeus=registry.cn-hangzhou.aliyuncs.com/huweihuang/zeus:${version} -n gin
 # 查看滚动升级
-kubectl rollout status deployment/gin-api-frame  -n gin
+kubectl rollout status deployment/zeus  -n gin

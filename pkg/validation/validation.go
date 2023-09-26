@@ -3,7 +3,7 @@ package validation
 import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 
-	"github.com/huweihuang/gin-api-frame/pkg/types"
+	"github.com/huweihuang/zeus/pkg/types"
 )
 
 // 校验创建请求

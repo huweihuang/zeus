@@ -8,10 +8,10 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	errConst "github.com/huweihuang/gin-api-frame/pkg/errors"
-	"github.com/huweihuang/gin-api-frame/pkg/types"
-	"github.com/huweihuang/gin-api-frame/pkg/util"
 	log "github.com/huweihuang/golib/logger/logrus"
+	errConst "github.com/huweihuang/zeus/pkg/errors"
+	"github.com/huweihuang/zeus/pkg/types"
+	"github.com/huweihuang/zeus/pkg/util"
 )
 
 const (

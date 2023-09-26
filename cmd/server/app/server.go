@@ -8,18 +8,18 @@ import (
 	cliflag "k8s.io/component-base/cli/flag"
 	"k8s.io/component-base/term"
 
-	"github.com/huweihuang/gin-api-frame/cmd/server/app/configs"
-	"github.com/huweihuang/gin-api-frame/cmd/server/app/options"
-	"github.com/huweihuang/gin-api-frame/pkg/server"
-	"github.com/huweihuang/gin-api-frame/pkg/version/verflag"
+	"github.com/huweihuang/zeus/cmd/server/app/configs"
+	"github.com/huweihuang/zeus/cmd/server/app/options"
+	"github.com/huweihuang/zeus/pkg/server"
+	"github.com/huweihuang/zeus/pkg/version/verflag"
 )
 
-// NewServerCommand creates gin-api-frame command
+// NewServerCommand creates zeus command
 func NewServerCommand() *cobra.Command {
 	opts := options.NewServerOptions()
 	cmd := &cobra.Command{
-		Use:  "gin-api-frame",
-		Long: "gin-api-frame api server",
+		Use:  "zeus",
+		Long: "zeus api server",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			verflag.PrintAndExitIfRequested()
 			cliflag.PrintFlags(cmd.Flags())

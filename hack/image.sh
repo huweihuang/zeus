@@ -6,7 +6,7 @@ VERSION=$1
 VERSION=${VERSION:-latest}
 REGISTRY="registry.cn-hangzhou.aliyuncs.com"
 NAMESPACE="huweihuang"
-APP="gin-api-frame"
+APP="zeus"
 fullname=${REGISTRY}/${NAMESPACE}/${APP}:${VERSION}
 
 function buildimage() {

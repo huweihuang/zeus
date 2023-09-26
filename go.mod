@@ -1,4 +1,4 @@
-module github.com/huweihuang/gin-api-frame
+module github.com/huweihuang/zeus
 
 go 1.20
 

@@ -1,6 +1,6 @@
-# Gin-api-frame
+# zeus
 
-gin-api-frame提供一种基于[Gin](https://github.com/gin-gonic/gin)快速开发API服务的框架。
+`zeus`提供一种基于[Gin](https://github.com/gin-gonic/gin)快速开发API服务的框架。
 
 # Feature
 
@@ -69,11 +69,11 @@ pkg
 ### step1. 下载项目代码，替换项目名称
 
 ```
-git clone https://github.com/huweihuang/gin-api-frame.git
-cd gin-api-frame
+git clone https://github.com/huweihuang/zeus.git
+cd zeus
 
 # for mac
-grep -rl gin-api-frame . | xargs sed -i "" 's/gin-api-frame/{you-project}/g' 
+grep -rl zeus . | xargs sed -i "" 's/zeus/{you-project}/g' 
 ```
 
 ### step2. 定义配置参数，项目结构体参数。
@@ -109,4 +109,4 @@ kubectl create -f hack/deploy/deploy.yaml
 
 # Have fun ^_^
 
-Please <a class="github-button" href="https://github.com/huweihuang/gin-api-frame" data-icon="octicon-star" aria-label="Star huweihuang/hexo-theme-huweihuang on GitHub">Star</a> this Project if you like it! <a class="github-button" href="https://github.com/huweihuang" aria-label="Follow @huweihuang on GitHub">Follow</a> would also be appreciated!
+Please <a class="github-button" href="https://github.com/huweihuang/zeus" data-icon="octicon-star" aria-label="Star huweihuang/hexo-theme-huweihuang on GitHub">Star</a> this Project if you like it! <a class="github-button" href="https://github.com/huweihuang" aria-label="Follow @huweihuang on GitHub">Follow</a> would also be appreciated!

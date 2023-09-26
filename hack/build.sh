@@ -3,9 +3,9 @@ set -x
 set -e
 
 # 应用参数
-APP="gin-api-frame"
+APP="zeus"
 BUILD_DIR=./_output
-BASE_DIR="github.com/huweihuang/gin-api-frame"
+BASE_DIR="github.com/huweihuang/zeus"
 VERSION_PACKAGE="${BASE_DIR}/pkg/version"
 
 # 构建参数

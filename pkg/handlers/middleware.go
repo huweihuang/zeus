@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	log "github.com/huweihuang/golib/logger/logrus"
 
-	"github.com/huweihuang/gin-api-frame/pkg/types"
+	"github.com/huweihuang/zeus/pkg/types"
 )
 
 const (

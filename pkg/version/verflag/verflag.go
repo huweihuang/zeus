@@ -23,7 +23,7 @@ import (
 
 	flag "github.com/spf13/pflag"
 
-	"github.com/huweihuang/gin-api-frame/pkg/version"
+	"github.com/huweihuang/zeus/pkg/version"
 )
 
 type versionValue int
