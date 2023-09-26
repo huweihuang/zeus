@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/huweihuang/gin-api-frame/pkg/handlers"
 	log "github.com/huweihuang/golib/logger/logrus"
+	"github.com/huweihuang/zeus/pkg/handlers"
 )
 
 func (s *Server) setupRoutes() {

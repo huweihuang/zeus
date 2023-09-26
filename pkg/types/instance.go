@@ -1,7 +1,7 @@
 package types
 
 import (
-	"github.com/huweihuang/gin-api-frame/pkg/constant"
+	"github.com/huweihuang/zeus/pkg/constant"
 )
 
 // Instance represents the configuration of a single Instance.

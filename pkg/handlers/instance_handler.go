@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	ware "github.com/huweihuang/golib/gin/middlewares"
 
-	"github.com/huweihuang/gin-api-frame/pkg/errors"
-	"github.com/huweihuang/gin-api-frame/pkg/service"
-	"github.com/huweihuang/gin-api-frame/pkg/types"
-	"github.com/huweihuang/gin-api-frame/pkg/validation"
+	"github.com/huweihuang/zeus/pkg/errors"
+	"github.com/huweihuang/zeus/pkg/service"
+	"github.com/huweihuang/zeus/pkg/types"
+	"github.com/huweihuang/zeus/pkg/validation"
 )
 
 type InstanceHandler struct {

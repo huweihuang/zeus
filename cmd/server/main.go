@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/huweihuang/gin-api-frame/cmd/server/app"
+	"github.com/huweihuang/zeus/cmd/server/app"
 )
 
 const (

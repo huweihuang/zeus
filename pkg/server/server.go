@@ -13,8 +13,8 @@ import (
 	log "github.com/huweihuang/golib/logger/logrus"
 	"github.com/sirupsen/logrus"
 
-	"github.com/huweihuang/gin-api-frame/cmd/server/app/configs"
-	"github.com/huweihuang/gin-api-frame/pkg/model"
+	"github.com/huweihuang/zeus/cmd/server/app/configs"
+	"github.com/huweihuang/zeus/pkg/model"
 )
 
 type Server struct {

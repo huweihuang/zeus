@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/huweihuang/gin-api-frame/pkg/model"
-	"github.com/huweihuang/gin-api-frame/pkg/types"
+	"github.com/huweihuang/zeus/pkg/model"
+	"github.com/huweihuang/zeus/pkg/types"
 )
 
 // 控制器用来批量管理服务
