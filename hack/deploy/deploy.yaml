@@ -5,31 +5,22 @@ metadata:
   namespace: gin
 data:
   gin-api-frame.conf: |-
-    [Server]
-    Host = "0.0.0.0"
-    Port = 8080
-    CertFile=""
-    KeyFile=""
-
-    [Log]
-    LogFile = "/data/gin-api-frame/log/gin-api-frame.log"
-    # BackTrackLevel = "debug"
-    LogLevel = "debug"
-    LogFormat = "text"
-    EnableForceColors = true
-
-    [Database]
-    User = "gin"
-    Password = "xxx"
-    Addr = "127.0.0.1:3600"
-    DBName = "gin"
-
-    [Etcd]
-    Endpoints = "https://etcd-gin:2379"
-    CertFile = "/opt/etcd/certs/client/etcd-client.crt"
-    KeyFile = "/opt/etcd/certs/client/etcd-client.key"
-    CAFile = "/opt/etcd/certs/client/etcd-ca.crt"
-    JobQueueKey = "/gin/apiserver/job/queue"
+    server:
+      host: "0.0.0.0"
+      port: 80
+      cert_file: ""
+      key_file: ""
+    log:
+      log_file: "/data/gin-api-frame/log/gin-api-frame.log"
+      log_level: "debug"
+      log_format: "text"
+      enable_force_colors: true
+    database:
+      user: ""
+      password: ""
+      addr: ""
+      db_name: ""
+      log_level: ""
 
 
 ---

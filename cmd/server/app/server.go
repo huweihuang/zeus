@@ -3,11 +3,12 @@ package app
 import (
 	"fmt"
 
+	"github.com/huweihuang/golib/config"
 	"github.com/spf13/cobra"
 	cliflag "k8s.io/component-base/cli/flag"
 	"k8s.io/component-base/term"
 
-	"github.com/huweihuang/gin-api-frame/cmd/server/app/config"
+	"github.com/huweihuang/gin-api-frame/cmd/server/app/configs"
 	"github.com/huweihuang/gin-api-frame/cmd/server/app/options"
 	"github.com/huweihuang/gin-api-frame/pkg/server"
 	"github.com/huweihuang/gin-api-frame/pkg/version/verflag"
@@ -49,10 +50,10 @@ func NewServerCommand() *cobra.Command {
 
 // Run runs the ServerConfig. This should never exit
 func Run(opt *options.ServerOptions) error {
-	conf, err := config.InitConfig(opt.ConfFile)
+	err := config.InitConfigObjectByPath(opt.ConfFile, configs.ApiConfig)
 	if err != nil {
 		return err
 	}
-	s := server.NewServer(conf)
+	s := server.NewServer(configs.ApiConfig)
 	return s.Run()
 }

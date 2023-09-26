@@ -18,7 +18,7 @@ func NewServerOptions() *ServerOptions {
 // Flags returns flags for a specific APIServer by section name
 func (o *ServerOptions) Flags() (fss cliflag.NamedFlagSets) {
 	fs := fss.FlagSet("server")
-	fs.StringVarP(&o.ConfFile, "config", "c", "conf/config.yaml", "config file path.")
+	fs.StringVarP(&o.ConfFile, "config", "c", "configs/config.yaml", "config file path.")
 	return fss
 }
 

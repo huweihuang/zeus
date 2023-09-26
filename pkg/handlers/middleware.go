@@ -5,8 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	log "github.com/huweihuang/golib/logger/logrus"
-	"github.com/sirupsen/logrus"
-	"k8s.io/apimachinery/pkg/util/validation/field"
 
 	"github.com/huweihuang/gin-api-frame/pkg/types"
 )
@@ -30,17 +28,4 @@ func HandlerMiddleware(c *gin.Context) {
 		return
 	}
 	c.Set(instanceReqCtx, instance)
-}
-
-// 封装校验非法请求的处理逻辑
-func validateBadRequestWrapper(c *gin.Context, errs field.ErrorList) {
-	resp := types.Response{
-		Code:    http.StatusBadRequest,
-		Message: "invalid request",
-		Data:    map[string]interface{}{"error": errs},
-	}
-	log.Logger.WithFields(logrus.Fields{
-		"errs": errs.ToAggregate().Error(),
-	}).Error("Invalid request")
-	c.JSON(http.StatusBadRequest, resp)
 }

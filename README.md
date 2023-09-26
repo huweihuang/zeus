@@ -1,6 +1,14 @@
 # Gin-api-frame
 
-gin-api-frame提供一种基于[Gin](https://github.com/gin-gonic/gin)快速开发API服务的框架。其中使用到的日志库为[logrus](https://github.com/sirupsen/logrus)，orm库为[gorm](https://github.com/go-gorm/gorm)，命令行框架为[cobra](https://github.com/spf13/cobra)。
+gin-api-frame提供一种基于[Gin](https://github.com/gin-gonic/gin)快速开发API服务的框架。
+
+# Feature
+
+- 命令行框架：[cobra](https://github.com/spf13/cobra)
+- Web框架：[Gin](https://github.com/gin-gonic/gin)
+- 日志库：[logrus](https://github.com/sirupsen/logrus)
+- ORM库：[gorm](https://github.com/go-gorm/gorm)
+- 配置：[viper](https://github.com/spf13/viper)
 
 # Framework
 
@@ -25,7 +33,7 @@ gin-api-frame提供一种基于[Gin](https://github.com/gin-gonic/gin)快速开�
 - cmd: main函数入口，包含参数解析和配置文件。
 - docs: 文档目录。
 - hack: 编译构建脚本，部署文件及脚本。
-- pkg: 核心代码逻辑，主要包括handler、controller、model等。
+- pkg: 核心代码逻辑，主要包括handlers、service、model等。
 - _output：构建产物存储路径。
 
 核心代码逻辑为`pkg`包，具体目录功能如下：
@@ -34,9 +42,9 @@ gin-api-frame提供一种基于[Gin](https://github.com/gin-gonic/gin)快速开�
 pkg
 ├── apis
 ├── constant
-├── controller
+├── service
 ├── errors
-├── handler
+├── handlers
 ├── model
 ├── server
 ├── types
@@ -46,9 +54,9 @@ pkg
 ```
 
 - constant: 常量包。
-- controller：实际的业务控制器逻辑。
+- service：实际的业务控制器逻辑。
 - errors: 定义error常量。
-- handler: gin框架的handler逻辑。
+- handlers: gin框架的handler逻辑。
 - model: 数据库增删改查操作逻辑。
 - server: gin框架的路由定义逻辑。
 - types: 定义项目的结构体类型对象。
@@ -60,26 +68,26 @@ pkg
 
 ### step1. 下载项目代码，替换项目名称
 
-
-
 ```
 git clone https://github.com/huweihuang/gin-api-frame.git
+cd gin-api-frame
 
-grep -rl gin-api-frame . | xargs sed -i 's/gin-api-frame/{you-project}/g' 
+# for mac
+grep -rl gin-api-frame . | xargs sed -i "" 's/gin-api-frame/{you-project}/g' 
 ```
 
 ### step2. 定义配置参数，项目结构体参数。
 
 - cmd/server/app/config/config.go: 默认有日志配置、数据库配置、Etcd配置。可自定义增加配置项。
-配置文件为toml格式，具体参考[hack/conf/conf.toml]。
+配置文件为yaml格式，具体参考[conf/config.yaml]。
 
 - pkg/types: 定义项目所需结构体对象。
 
 ### step3. 补充业务逻辑代码及路由。
 
 - model: 定义数据库增删改查逻辑。
-- controller：定义业务控制逻辑。
-- handler: 定义handler处理逻辑。
+- service：定义业务控制逻辑。
+- handlers: 定义handler处理逻辑。
 - server/router: 定义路由逻辑。
 - validation: 定义入参校验逻辑。
 
