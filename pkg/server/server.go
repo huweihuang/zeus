@@ -13,17 +13,17 @@ import (
 	log "github.com/huweihuang/golib/logger/logrus"
 	"github.com/sirupsen/logrus"
 
-	"github.com/huweihuang/gin-api-frame/cmd/server/app/config"
+	"github.com/huweihuang/gin-api-frame/cmd/server/app/configs"
 	"github.com/huweihuang/gin-api-frame/pkg/model"
 )
 
 type Server struct {
-	conf *config.Config
+	conf *configs.Config
 	gin  *gin.Engine
 }
 
 // NewServer creates a Server object
-func NewServer(conf *config.Config) *Server {
+func NewServer(conf *configs.Config) *Server {
 	gin.SetMode(gin.ReleaseMode)
 	return &Server{
 		conf: conf,
@@ -74,7 +74,7 @@ func (s *Server) setupServer(logger *logrus.Logger) *gin.Engine {
 	return s.gin
 }
 
-func setLogger(conf *config.LogConfig) *logrus.Logger {
+func setLogger(conf *configs.LogConfig) *logrus.Logger {
 	logger := log.InitLogger(conf.LogFile, conf.LogLevel, conf.LogFormat, conf.EnableReportCaller, conf.EnableForceColors)
 	return logger
 }

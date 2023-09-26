@@ -27,7 +27,7 @@ func (h *InstanceHandler) CreateInstance(c *gin.Context) {
 	instance := c.MustGet(instanceReqCtx).(types.Instance)
 	errs := validation.ValidateCreateInstance(&instance)
 	if len(errs) != 0 {
-		validateBadRequestWrapper(c, errs)
+		ware.ValidateBadRequestWrapper(c, errs)
 		return
 	}
 
@@ -49,7 +49,7 @@ func (h *InstanceHandler) UpdateInstance(c *gin.Context) {
 	instance := c.MustGet(instanceReqCtx).(types.Instance)
 	errs := validation.ValidateUpdateInstance(&instance)
 	if len(errs) != 0 {
-		validateBadRequestWrapper(c, errs)
+		ware.ValidateBadRequestWrapper(c, errs)
 		return
 	}
 
@@ -98,7 +98,7 @@ func (h *InstanceHandler) DeleteInstance(c *gin.Context) {
 	instance := c.MustGet(instanceReqCtx).(types.Instance)
 	errs := validation.ValidateDeleteInstance(&instance)
 	if len(errs) != 0 {
-		validateBadRequestWrapper(c, errs)
+		ware.ValidateBadRequestWrapper(c, errs)
 		return
 	}
 

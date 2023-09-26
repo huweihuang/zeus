@@ -1,12 +1,4 @@
-package config
-
-import (
-	"fmt"
-
-	"github.com/spf13/viper"
-
-	log "github.com/huweihuang/golib/logger/logrus"
-)
+package configs
 
 var ApiConfig *Config
 
@@ -44,26 +36,11 @@ type DBConfig struct {
 	LogLevel string
 }
 
-// Etcd config
+// EtcdConfig is config for etcd
 type EtcdConfig struct {
 	Endpoints   string
 	CertFile    string
 	KeyFile     string
 	CAFile      string
 	JobQueueKey string
-}
-
-func InitConfig(configPath string) (*Config, error) {
-	viper.SetConfigFile(configPath)
-	if err := viper.ReadInConfig(); err != nil {
-		return nil, fmt.Errorf("failed to read in config by viper, err: %v", err)
-	}
-
-	err := viper.Unmarshal(ApiConfig)
-	if err != nil {
-		return nil, fmt.Errorf("failed to unmarshal, err: %v", err)
-	}
-	log.Logger.WithField("config", ApiConfig).Debug("init config")
-
-	return ApiConfig, nil
 }

@@ -6,10 +6,7 @@ require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-contrib/pprof v1.4.0
 	github.com/gin-gonic/gin v1.9.1
-	github.com/go-sql-driver/mysql v1.7.1
-	github.com/huweihuang/golib/db v0.0.0-20230921082110-8ba9cef4fbb0
-	github.com/huweihuang/golib/gin v0.0.0-20230921034847-0cfc7cae05da
-	github.com/huweihuang/golib/logger v0.0.0-20230921034847-0cfc7cae05da
+	github.com/huweihuang/golib v0.0.0-20230926042638-fb82e462975e
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/cobra v1.7.0
 	github.com/spf13/pflag v1.0.5
@@ -37,6 +34,7 @@ require (
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
+	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.3 // indirect

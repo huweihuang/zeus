@@ -20,9 +20,7 @@ const (
 
 // 创建数据库instance
 func CreateInstance(ins *types.Instance) error {
-	db := GetDB()
-
-	err := db.Table(tableInstance).Clauses(clause.OnConflict{
+	err := DB.Table(tableInstance).Clauses(clause.OnConflict{
 		DoUpdates: clause.Assignments(map[string]interface{}{"replicas": ins.Spec.Replicas,
 			"status": ins.Status.Status, "job_state": ins.Status.JobState})}).Create(ins).Error
 	if err != nil {
@@ -34,9 +32,8 @@ func CreateInstance(ins *types.Instance) error {
 
 // 查询数据库instance
 func GetInstanceByHostIDAndAppName(hostID, name string) (*types.Instance, error) {
-	db := GetDB()
 	ins := &types.Instance{}
-	err := db.Table(tableInstance).Where("host_id= ? AND name=?", hostID, name).Take(ins).Error
+	err := DB.Table(tableInstance).Where("host_id= ? AND name=?", hostID, name).Take(ins).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errConst.ErrInstanceNotFound
@@ -52,8 +49,7 @@ func GetInstanceByHostIDAndAppName(hostID, name string) (*types.Instance, error)
 
 // 更新数据库instance状态
 func UpdateInstanceStatus(name string, status bool) error {
-	db := GetDB()
-	err := db.Table(tableInstance).Where("name = ?", name).Update("status", status).Error
+	err := DB.Table(tableInstance).Where("name = ?", name).Update("status", status).Error
 	if err != nil {
 		return fmt.Errorf("failed to update instance status by name, err: %v", err)
 	}
@@ -66,8 +62,7 @@ func UpdateInstanceStatus(name string, status bool) error {
 
 // 更新数据库instance镜像
 func UpdateInstanceImage(name, image string) error {
-	db := GetDB()
-	err := db.Table(tableInstance).Where("name = ?", name).Update("image", image).Error
+	err := DB.Table(tableInstance).Where("name = ?", name).Update("image", image).Error
 	if err != nil {
 		return fmt.Errorf("failed to update instance image by job_id, err: %v", err)
 	}
@@ -77,8 +72,7 @@ func UpdateInstanceImage(name, image string) error {
 
 // 删除数据库instance
 func DeleteInstance(insName string) error {
-	db := GetDB()
-	err := db.Table(tableInstance).Where("name = ?", insName).Delete(types.Instance{}).Error
+	err := DB.Table(tableInstance).Where("name = ?", insName).Delete(types.Instance{}).Error
 	if err != nil {
 		return fmt.Errorf("failed to delete instance in db, err: %v", err)
 	}

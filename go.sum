@@ -186,12 +186,8 @@ github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ
 github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/hcl v1.0.0 h1:0Anlzjpi4vEasTeNFn2mLJgTSwt0+6sfsiTG8qcWGx4=
 github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T20WEQ=
-github.com/huweihuang/golib/db v0.0.0-20230921082110-8ba9cef4fbb0 h1:UPp+O/9ukvyvna22cEUbOIYMuWpwTQ0UAn0Q1Ry0nrY=
-github.com/huweihuang/golib/db v0.0.0-20230921082110-8ba9cef4fbb0/go.mod h1:V4UJCiq5PQEOelIrmEZSmQDS5zp4tZGlqoJ8eKvfYbk=
-github.com/huweihuang/golib/gin v0.0.0-20230921034847-0cfc7cae05da h1:OzsVhwI0+cTC0H+atlee5aIMrYlyBycrOG6xCIPk/eo=
-github.com/huweihuang/golib/gin v0.0.0-20230921034847-0cfc7cae05da/go.mod h1:97b8Lp8rAB7N4OWwToVr0h8b3flcRxaSyW+o35tdzjM=
-github.com/huweihuang/golib/logger v0.0.0-20230921034847-0cfc7cae05da h1:TjqFtWLD72UL8+AXY2Z47p16BlarcfpRkxJpoX/EkZ0=
-github.com/huweihuang/golib/logger v0.0.0-20230921034847-0cfc7cae05da/go.mod h1:niqIzafD4MwBHDyrByla9z8nxXFzyXkyGS2yjiOC2qI=
+github.com/huweihuang/golib v0.0.0-20230926042638-fb82e462975e h1:AlnH+9rOVFicmbxe3MEhB+TZHAHeacsZvuTLp2hzgOA=
+github.com/huweihuang/golib v0.0.0-20230926042638-fb82e462975e/go.mod h1:/etWn2kEph2pdTag2Mzgaa8HvhPEzbP9JYcc0q5k138=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/inconshreveable/mousetrap v1.1.0 h1:wN+x4NVGpMsO7ErUn/mUI3vEoE6Jt13X2s0bqwp9tc8=
