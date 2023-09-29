@@ -8,6 +8,8 @@ type Config struct {
 	Log      *LogConfig
 	Database *DBConfig
 	Etcd     *EtcdConfig
+	Worker   *WorkConfig
+	K8s      *K8sConfig
 }
 
 // ServerConfig is http server config
@@ -43,4 +45,12 @@ type EtcdConfig struct {
 	KeyFile     string
 	CAFile      string
 	JobQueueKey string
+}
+
+type K8sConfig struct {
+	KubeConfigPath string
+}
+
+type WorkConfig struct {
+	WorkerNumber int
 }

@@ -1,97 +1,105 @@
 package controller
 
 import (
-	"context"
+	"fmt"
 	"time"
 
+	"github.com/huweihuang/golib/kube"
+	log "github.com/huweihuang/golib/logger/logrus"
+	"github.com/huweihuang/zeus/pkg/constant"
 	"k8s.io/apimachinery/pkg/util/wait"
-	logger "k8s.io/klog/v2"
-
 	clientset "k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
+
+	"github.com/huweihuang/zeus/pkg/types"
 )
 
 const (
-	// maxRetries is the number of times a deployment will be retried before it is dropped out of the queue.
-	maxRetries = 15
+	// maxRetries is the number of times a job will be retried before it is dropped out of the queue.
+	maxRetries = 5
 )
 
-// DeploymentController is responsible for synchronizing Deployment objects stored
+// WorkerController is responsible for synchronizing job objects stored
 // in the system with actual running replica sets and pods.
-type DeploymentController struct {
+type WorkerController struct {
 	client clientset.Interface
-	// Deployments that need to be synced
+	// Workers that need to be synced
 	queue workqueue.RateLimitingInterface
 }
 
-// NewDeploymentController creates a new DeploymentController.
-func NewDeploymentController(ctx context.Context, client clientset.Interface) (*DeploymentController, error) {
-	dc := &DeploymentController{
-		client: client,
-		queue:  workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "deployment"),
+// NewWorkerController creates a new WorkerController.
+func NewWorkerController(kubeConfig string) (*WorkerController, error) {
+	client, err := kube.NewKubeClient(kubeConfig)
+	if err != nil {
+		return nil, fmt.Errorf("failed to new kube client, err: %v", err)
 	}
-	return dc, nil
+	c := &WorkerController{
+		client: client,
+		queue:  workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "job"),
+	}
+	return c, nil
 }
 
 // Run begins watching and syncing.
-func (dc *DeploymentController) Run(ctx context.Context, workers int) {
-	defer dc.queue.ShutDown()
+func (c *WorkerController) Run(workers int) {
+	defer c.queue.ShutDown()
 
 	for i := 0; i < workers; i++ {
-		go wait.UntilWithContext(ctx, dc.worker, time.Second)
-	}
-
-	<-ctx.Done()
-}
-
-// worker runs a worker thread that just dequeues items, processes them, and marks them done.
-// It enforces that the syncHandler is never invoked concurrently with the same key.
-func (dc *DeploymentController) worker(ctx context.Context) {
-	for dc.processNextWorkItem(ctx) {
+		go wait.Forever(func() {
+			if err := c.syncWorker(); err != nil {
+				log.Logger.WithError(err).Errorln("failed to sync worker controller")
+			}
+		}, time.Second)
 	}
 }
 
-func (dc *DeploymentController) processNextWorkItem(ctx context.Context) bool {
-	key, quit := dc.queue.Get()
+func (c *WorkerController) syncWorker() (err error) {
+	job, quit := c.queue.Get()
 	if quit {
-		return false
+		return fmt.Errorf("quit workqueue")
 	}
-	defer dc.queue.Done(key)
+	defer c.queue.Done(job)
 
-	err := dc.syncHandler(ctx, key.(string))
-	dc.handleErr(ctx, err, key)
+	switch job.(types.Instance).Status.JobState {
+	case constant.JobStateCreating:
+		err = c.createWorker()
+	case constant.JobStateUpdating:
+		err = c.updateWorker()
+	case constant.JobStateDeleting:
+		err = c.deleteWorker()
+	}
 
-	return true
-}
-
-// syncHandler will sync the deployment with the given key.
-// This function is not meant to be invoked concurrently with the same key.
-func (dc *DeploymentController) syncHandler(ctx context.Context, key string) error {
+	c.handleErr(err, job)
 	return nil
 }
 
-func (dc *DeploymentController) handleErr(ctx context.Context, err error, key interface{}) {
+// handleErr 错误没有超过重试次数则重新入队列
+func (c *WorkerController) handleErr(err error, job interface{}) {
 	if err == nil {
-		dc.queue.Forget(key)
-		return
-	}
-	ns, name, keyErr := cache.SplitMetaNamespaceKey(key.(string))
-	if keyErr != nil {
-		logger.Error(err, "Failed to split meta namespace cache key", "cacheKey", key)
-	}
-
-	if dc.queue.NumRequeues(key) < maxRetries {
-		logger.V(2).Info("Error syncing deployment", "deployment", logger.KRef(ns, name), "err", err)
-		dc.queue.AddRateLimited(key)
+		c.queue.Forget(job)
 		return
 	}
 
-	logger.V(2).Info("Dropping deployment out of the queue", "deployment", logger.KRef(ns, name), "err", err)
-	dc.queue.Forget(key)
+	// 没有超过重试次数，则重新入队列
+	if c.queue.NumRequeues(job) < maxRetries {
+		log.Logger.WithError(err).WithField("job", job).Info("Error syncing job")
+		c.queue.AddRateLimited(job)
+		return
+	}
+
+	// 超过重试次数则丢弃任务，打印错误日志
+	log.Logger.WithError(err).WithField("job", job).Info("Dropping job out of the queue")
+	c.queue.Forget(job)
 }
 
-func (dc *DeploymentController) enqueue(deployment interface{}) {
-	key := ""
-	dc.queue.Add(key)
+func (c *WorkerController) enqueue(job interface{}) {
+	c.queue.Add(job)
+}
+
+func (c *WorkerController) enqueueAfter(job interface{}, after time.Duration) {
+	c.queue.AddAfter(job, after)
+}
+
+func (c *WorkerController) enqueueRateLimited(job interface{}) {
+	c.queue.AddRateLimited(job)
 }
