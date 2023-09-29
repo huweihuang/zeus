@@ -14,6 +14,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/huweihuang/zeus/cmd/server/app/configs"
+	"github.com/huweihuang/zeus/pkg/controller"
 	"github.com/huweihuang/zeus/pkg/model"
 )
 
@@ -38,6 +39,13 @@ func (s *Server) Run() error {
 	if _, err := model.SetupDB(s.conf.Database); err != nil {
 		return err
 	}
+
+	// start worker controller
+	workerController, err := controller.NewWorkerController(s.conf.K8s.KubeConfigPath)
+	if err != nil {
+		return fmt.Errorf("failed to new worker controller, err: %v", err)
+	}
+	workerController.Run(s.conf.Worker.WorkerNumber)
 
 	// setup http server
 	addr := fmt.Sprintf("%s:%d", s.conf.Server.Host, s.conf.Server.Port)
