@@ -28,7 +28,7 @@ mkdir -p "$BUILD_DIR/bin"
 function gobuild () {
     bin=${1}
     echo "Building ${bin} now."
-    CGO_ENABLED=0 GOOS="$TARGET_OS" GOARCH="$TARGET_ARCH" go build -i -v -ldflags "${GO_LDFLAGS}" \
+    CGO_ENABLED=0 GOOS="$TARGET_OS" GOARCH="$TARGET_ARCH" go build -v -ldflags "${GO_LDFLAGS}" \
         -o $BUILD_DIR/bin/"${bin}" ${BASE_DIR}/cmd/server
     if [[ $? -ne 0 ]]; then
         echo "Failed to build ${bin}"

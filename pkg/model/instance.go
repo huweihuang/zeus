@@ -14,13 +14,8 @@ import (
 	"github.com/huweihuang/zeus/pkg/util"
 )
 
-const (
-	tableInstance = "t_instance"
-)
-
-// 创建数据库instance
-func CreateInstance(ins *types.Instance) error {
-	err := DB.Table(tableInstance).Clauses(clause.OnConflict{
+func (m *DBMng) CreateInstance(ins *types.Instance) error {
+	err := m.db.Clauses(clause.OnConflict{
 		DoUpdates: clause.Assignments(map[string]interface{}{"replicas": ins.Spec.Replicas,
 			"status": ins.Status.Status, "job_state": ins.Status.JobState})}).Create(ins).Error
 	if err != nil {
@@ -30,10 +25,9 @@ func CreateInstance(ins *types.Instance) error {
 	return nil
 }
 
-// 查询数据库instance
-func GetInstanceByHostIDAndAppName(hostID, name string) (*types.Instance, error) {
+func (m *DBMng) GetInstance(hostID, name string) (*types.Instance, error) {
 	ins := &types.Instance{}
-	err := DB.Table(tableInstance).Where("host_id= ? AND name=?", hostID, name).Take(ins).Error
+	err := m.db.Where("host_id= ? AND name=?", hostID, name).Take(ins).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errConst.ErrInstanceNotFound
@@ -47,9 +41,8 @@ func GetInstanceByHostIDAndAppName(hostID, name string) (*types.Instance, error)
 	return ins, nil
 }
 
-// 更新数据库instance状态
-func UpdateInstanceStatus(name string, status bool) error {
-	err := DB.Table(tableInstance).Where("name = ?", name).Update("status", status).Error
+func (m *DBMng) UpdateInstanceStatus(name string, status bool) error {
+	err := m.db.Where("name = ?", name).Update("status", status).Error
 	if err != nil {
 		return fmt.Errorf("failed to update instance status by name, err: %v", err)
 	}
@@ -60,9 +53,8 @@ func UpdateInstanceStatus(name string, status bool) error {
 	return nil
 }
 
-// 更新数据库instance镜像
-func UpdateInstanceImage(name, image string) error {
-	err := DB.Table(tableInstance).Where("name = ?", name).Update("image", image).Error
+func (m *DBMng) UpdateInstanceImage(name, image string) error {
+	err := m.db.Where("name = ?", name).Update("image", image).Error
 	if err != nil {
 		return fmt.Errorf("failed to update instance image by job_id, err: %v", err)
 	}
@@ -70,9 +62,8 @@ func UpdateInstanceImage(name, image string) error {
 	return nil
 }
 
-// 删除数据库instance
-func DeleteInstance(insName string) error {
-	err := DB.Table(tableInstance).Where("name = ?", insName).Delete(types.Instance{}).Error
+func (m *DBMng) DeleteInstance(insName string) error {
+	err := m.db.Where("name = ?", insName).Delete(types.Instance{}).Error
 	if err != nil {
 		return fmt.Errorf("failed to delete instance in db, err: %v", err)
 	}

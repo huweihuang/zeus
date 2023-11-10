@@ -50,10 +50,10 @@ func NewServerCommand() *cobra.Command {
 
 // Run runs the ServerConfig. This should never exit
 func Run(opt *options.ServerOptions) error {
-	err := config.InitConfigObjectByPath(opt.ConfFile, configs.ApiConfig)
+	err := config.InitConfigObjectByPath(opt.ConfFile, configs.GlobalConfig)
 	if err != nil {
 		return err
 	}
-	s := server.NewServer(configs.ApiConfig)
+	s := server.NewServer(configs.GlobalConfig)
 	return s.Run()
 }

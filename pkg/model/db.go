@@ -7,20 +7,32 @@ import (
 	"github.com/huweihuang/zeus/cmd/server/app/configs"
 )
 
-var DB *gorm.DB
+// DB is a global db manager
+var DB *DBMng
 
-func SetupDB(dbConf *configs.DBConfig) (DB *gorm.DB, err error) {
-	DB, err = db.SetupDB(dbConf.Addr, dbConf.DBName, dbConf.User, dbConf.Password, dbConf.LogLevel)
+type DBMng struct {
+	db *gorm.DB
+}
+
+func NewDBMng(db *gorm.DB) *DBMng {
+	return &DBMng{
+		db: db,
+	}
+}
+
+func InitDB(dbConf *configs.DBConfig) (*DBMng, error) {
+	d, err := db.SetupDB(dbConf.Addr, dbConf.DBName, dbConf.User, dbConf.Password, dbConf.LogLevel)
 	if err != nil {
 		return nil, err
 	}
+	DB = NewDBMng(d)
 	return DB, nil
 }
 
 func Close() error {
-	sqlDB, err := DB.DB()
+	db, err := DB.db.DB()
 	if err != nil {
 		return err
 	}
-	return sqlDB.Close()
+	return db.Close()
 }

@@ -14,6 +14,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/huweihuang/zeus/cmd/server/app/configs"
+	"github.com/huweihuang/zeus/pkg/client"
 	"github.com/huweihuang/zeus/pkg/controller"
 	"github.com/huweihuang/zeus/pkg/model"
 )
@@ -34,10 +35,12 @@ func NewServer(conf *configs.Config) *Server {
 
 // Run runs the specified APIServer.  This should never exit.
 func (s *Server) Run() error {
+	defer s.Shutdown()
+
 	// init config
-	logger := setLogger(s.conf.Log)
-	if _, err := model.SetupDB(s.conf.Database); err != nil {
-		return err
+	logger, err := Init(s.conf)
+	if err != nil {
+		return fmt.Errorf("failed to init config, err: %v", err)
 	}
 
 	// start worker controller
@@ -45,16 +48,26 @@ func (s *Server) Run() error {
 	if err != nil {
 		return fmt.Errorf("failed to new worker controller, err: %v", err)
 	}
-	workerController.Run(s.conf.Worker.WorkerNumber)
+	go workerController.Run(s.conf.Worker.WorkerNumber)
 
 	// setup http server
 	addr := fmt.Sprintf("%s:%d", s.conf.Server.Host, s.conf.Server.Port)
 	server := s.setupServer(logger)
 	if s.conf.Server.CertFile != "" && s.conf.Server.KeyFile != "" {
-		go server.RunTLS(addr, s.conf.Server.CertFile, s.conf.Server.KeyFile)
+		go func() {
+			err := server.RunTLS(addr, s.conf.Server.CertFile, s.conf.Server.KeyFile)
+			if err != nil {
+				log.Logger.WithError(err).Fatal("Failed to start http server")
+			}
+		}()
 		log.Logger.Infof("Server listening at https://%s", addr)
 	} else {
-		go server.Run(addr)
+		go func() {
+			err := server.Run(addr)
+			if err != nil {
+				log.Logger.WithError(err).Fatal("Failed to start http server")
+			}
+		}()
 		log.Logger.Infof("Server listening at http://%s", addr)
 	}
 
@@ -63,9 +76,6 @@ func (s *Server) Run() error {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
-	if err := model.Close(); err != nil {
-		log.Logger.Errorf("Close db error: %s", err.Error())
-	}
 	log.Logger.Infof("Shutting down...")
 	return nil
 }
@@ -82,7 +92,23 @@ func (s *Server) setupServer(logger *logrus.Logger) *gin.Engine {
 	return s.gin
 }
 
-func setLogger(conf *configs.LogConfig) *logrus.Logger {
-	logger := log.InitLogger(conf.LogFile, conf.LogLevel, conf.LogFormat, conf.EnableReportCaller, conf.EnableForceColors)
-	return logger
+func (s *Server) Shutdown() {
+	err := model.Close()
+	if err != nil {
+		log.Logger.Errorf("Close db error: %s", err.Error())
+	}
+}
+
+func Init(conf *configs.Config) (*logrus.Logger, error) {
+	logger := log.InitLogger(conf.Log.LogFile, conf.Log.LogLevel, conf.Log.LogFormat, conf.Log.EnableForceColors)
+
+	_, err := model.InitDB(conf.Database)
+	if err != nil {
+		return nil, err
+	}
+	_, err = client.NewClients(conf.Client)
+	if err != nil {
+		return nil, err
+	}
+	return logger, nil
 }
