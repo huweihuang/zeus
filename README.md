@@ -1,6 +1,6 @@
 # zeus
 
-`zeus`提供一种基于[Gin](https://github.com/gin-gonic/gin)快速开发API服务的框架。
+`zeus(宙斯)`提供一种基于[Gin](https://github.com/gin-gonic/gin)快速开发API服务的框架。
 
 # Feature
 

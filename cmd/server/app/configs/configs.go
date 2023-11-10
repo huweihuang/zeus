@@ -1,6 +1,6 @@
 package configs
 
-var ApiConfig *Config
+var GlobalConfig *Config
 
 // Config is general configuration
 type Config struct {
@@ -10,6 +10,7 @@ type Config struct {
 	Etcd     *EtcdConfig
 	Worker   *WorkConfig
 	K8s      *K8sConfig
+	Client   *ClientConfig
 }
 
 // ServerConfig is http server config
@@ -22,11 +23,10 @@ type ServerConfig struct {
 
 // LogConfig is config for logger
 type LogConfig struct {
-	LogFile            string
-	LogLevel           string
-	LogFormat          string
-	EnableReportCaller bool
-	EnableForceColors  bool
+	LogFile           string
+	LogLevel          string
+	LogFormat         string
+	EnableForceColors bool
 }
 
 // DBConfig is config for db
@@ -53,4 +53,7 @@ type K8sConfig struct {
 
 type WorkConfig struct {
 	WorkerNumber int
+}
+
+type ClientConfig struct {
 }
