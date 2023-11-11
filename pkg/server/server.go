@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/signal"
@@ -48,7 +49,7 @@ func (s *Server) Run() error {
 	if err != nil {
 		return fmt.Errorf("failed to new worker controller, err: %v", err)
 	}
-	go workerController.Run(s.conf.Worker.WorkerNumber)
+	go workerController.Run(context.Background(), s.conf.Worker.WorkerNumber)
 
 	// setup http server
 	addr := fmt.Sprintf("%s:%d", s.conf.Server.Host, s.conf.Server.Port)

@@ -5,7 +5,7 @@
 # Feature
 
 - 命令行框架：[cobra](https://github.com/spf13/cobra)
-- Web框架：[Gin](https://github.com/gin-gonic/gin)
+- Web框架：[gin](https://github.com/gin-gonic/gin)
 - 日志库：[logrus](https://github.com/sirupsen/logrus)
 - ORM库：[gorm](https://github.com/go-gorm/gorm)
 - 配置：[viper](https://github.com/spf13/viper)

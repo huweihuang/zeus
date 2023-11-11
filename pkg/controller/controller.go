@@ -1,16 +1,18 @@
 package controller
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/huweihuang/golib/kube"
 	log "github.com/huweihuang/golib/logger/logrus"
-	"github.com/huweihuang/zeus/pkg/constant"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/util/workqueue"
 
+	"github.com/huweihuang/zeus/pkg/constant"
 	"github.com/huweihuang/zeus/pkg/types"
 )
 
@@ -41,26 +43,42 @@ func NewWorkerController(kubeConfig string) (*WorkerController, error) {
 }
 
 // Run begins watching and syncing.
-func (c *WorkerController) Run(workers int) {
+func (c *WorkerController) Run(ctx context.Context, workers int) {
 	defer c.queue.ShutDown()
 
 	for i := 0; i < workers; i++ {
-		go wait.Forever(func() {
-			if err := c.syncWorker(); err != nil {
-				log.Logger.WithError(err).Errorln("failed to sync worker controller")
-			}
-		}, time.Second)
+		go wait.Forever(c.worker, time.Second)
+	}
+	log.Logger.Infof("worker controller is running, workers: [%d]", workers)
+
+	<-ctx.Done()
+}
+
+func (c *WorkerController) worker() {
+	for c.processNextWorkItem() {
 	}
 }
 
-func (c *WorkerController) syncWorker() (err error) {
-	job, quit := c.queue.Get()
+func (c *WorkerController) processNextWorkItem() bool {
+	key, quit := c.queue.Get()
+	log.Logger.WithField("key", key).WithField("quit", quit).Debug("processNextWorkItem begin")
 	if quit {
-		return fmt.Errorf("quit workqueue")
+		return false
 	}
-	defer c.queue.Done(job)
+	defer c.queue.Done(key)
 
-	switch job.(types.Instance).Status.JobState {
+	err := c.syncHandler(key.(string))
+	c.handleErr(err, key)
+	return true
+}
+
+func (c *WorkerController) syncHandler(job string) (err error) {
+	ins, err := ConvertJobToInstance(job)
+	if err != nil {
+		return err
+	}
+
+	switch ins.Status.JobState {
 	case constant.JobStateCreating:
 		err = c.createWorker()
 	case constant.JobStateUpdating:
@@ -92,14 +110,46 @@ func (c *WorkerController) handleErr(err error, job interface{}) {
 	c.queue.Forget(job)
 }
 
-func (c *WorkerController) enqueue(job interface{}) {
+func (c *WorkerController) enqueue(ins *types.Instance) error {
+	job, err := ConvertInstanceToJob(ins)
+	if err != nil {
+		return err
+	}
 	c.queue.Add(job)
+	return nil
 }
 
-func (c *WorkerController) enqueueAfter(job interface{}, after time.Duration) {
+func (c *WorkerController) enqueueAfter(ins *types.Instance, after time.Duration) error {
+	job, err := ConvertInstanceToJob(ins)
+	if err != nil {
+		return err
+	}
 	c.queue.AddAfter(job, after)
+	return nil
 }
 
-func (c *WorkerController) enqueueRateLimited(job interface{}) {
+func (c *WorkerController) enqueueRateLimited(ins *types.Instance) error {
+	job, err := ConvertInstanceToJob(ins)
+	if err != nil {
+		return err
+	}
 	c.queue.AddRateLimited(job)
+	return nil
+}
+
+func ConvertInstanceToJob(ins *types.Instance) (job string, err error) {
+	jobByte, err := json.Marshal(ins)
+	if err != nil {
+		return "", fmt.Errorf("json marshal error, %v", err)
+	}
+	job = string(jobByte)
+	return job, nil
+}
+
+func ConvertJobToInstance(job string) (ins *types.Instance, err error) {
+	err = json.Unmarshal([]byte(job), &ins)
+	if err != nil {
+		return nil, fmt.Errorf("json unmarshal error, %v", err)
+	}
+	return ins, nil
 }
