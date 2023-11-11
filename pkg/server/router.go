@@ -1,7 +1,7 @@
 package server
 
 import (
-	log "github.com/huweihuang/golib/logger/logrus"
+	log "github.com/huweihuang/golib/logger/zap"
 	"github.com/huweihuang/zeus/pkg/handlers"
 )
 
@@ -14,5 +14,5 @@ func (s *Server) setupRoutes() {
 	group.GET("/instance", handler.GetInstance)
 	group.DELETE("/instance", handler.DeleteInstance)
 
-	log.Logger.Info("setup routes succeed")
+	log.Logger().Info("setup routes succeed")
 }

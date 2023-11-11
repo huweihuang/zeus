@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	log "github.com/huweihuang/golib/logger/logrus"
+	log "github.com/huweihuang/golib/logger/zap"
 
 	"github.com/huweihuang/zeus/pkg/types"
 )
@@ -15,7 +15,7 @@ const (
 
 // Middleware: 处理公共解析操作
 func HandlerMiddleware(c *gin.Context) {
-	log.Logger.Debug("Use HandlerMiddleware")
+	log.Logger().Debug("Use HandlerMiddleware")
 	instance := types.Instance{}
 	if err := c.BindJSON(&instance); err != nil {
 		resp := types.Response{
@@ -23,7 +23,7 @@ func HandlerMiddleware(c *gin.Context) {
 			Message: "invalid request body",
 			Data:    map[string]interface{}{"error": err},
 		}
-		log.Logger.WithField("err", err).Warn("Invalid request body")
+		log.Logger().With("err", err).Warn("Invalid request body")
 		c.JSON(http.StatusBadRequest, resp)
 		return
 	}

@@ -11,8 +11,8 @@ import (
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	ware "github.com/huweihuang/golib/gin/middlewares"
-	log "github.com/huweihuang/golib/logger/logrus"
-	"github.com/sirupsen/logrus"
+	log "github.com/huweihuang/golib/logger/zap"
+	"go.uber.org/zap/zapcore"
 
 	"github.com/huweihuang/zeus/cmd/server/app/configs"
 	"github.com/huweihuang/zeus/pkg/client"
@@ -39,7 +39,7 @@ func (s *Server) Run() error {
 	defer s.Shutdown()
 
 	// init config
-	logger, err := Init(s.conf)
+	err := Init(s.conf)
 	if err != nil {
 		return fmt.Errorf("failed to init config, err: %v", err)
 	}
@@ -53,23 +53,23 @@ func (s *Server) Run() error {
 
 	// setup http server
 	addr := fmt.Sprintf("%s:%d", s.conf.Server.Host, s.conf.Server.Port)
-	server := s.setupServer(logger)
+	server := s.setupServer()
 	if s.conf.Server.CertFile != "" && s.conf.Server.KeyFile != "" {
 		go func() {
 			err := server.RunTLS(addr, s.conf.Server.CertFile, s.conf.Server.KeyFile)
 			if err != nil {
-				log.Logger.WithError(err).Fatal("Failed to start http server")
+				log.Logger().With(err).Fatal("Failed to start http server")
 			}
 		}()
-		log.Logger.Infof("Server listening at https://%s", addr)
+		log.Logger().Infof("Server listening at https://%s", addr)
 	} else {
 		go func() {
 			err := server.Run(addr)
 			if err != nil {
-				log.Logger.WithError(err).Fatal("Failed to start http server")
+				log.Logger().With(err).Fatal("Failed to start http server")
 			}
 		}()
-		log.Logger.Infof("Server listening at http://%s", addr)
+		log.Logger().Infof("Server listening at http://%s", addr)
 	}
 
 	// shutting down
@@ -77,16 +77,16 @@ func (s *Server) Run() error {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
-	log.Logger.Infof("Shutting down...")
+	log.Logger().Infof("Shutting down...")
 	return nil
 }
 
-func (s *Server) setupServer(logger *logrus.Logger) *gin.Engine {
+func (s *Server) setupServer() *gin.Engine {
 	pprof.Register(s.gin)
 	s.gin.Use(
 		ware.RequestIDMiddleware,
-		ware.LogMiddleware(logger),
-		gin.RecoveryWithWriter(logger.Out),
+		ware.Logger(),
+		gin.RecoveryWithWriter(zapcore.AddSync(os.Stdout)),
 		cors.Default(),
 	)
 	s.setupRoutes()
@@ -96,20 +96,20 @@ func (s *Server) setupServer(logger *logrus.Logger) *gin.Engine {
 func (s *Server) Shutdown() {
 	err := model.Close()
 	if err != nil {
-		log.Logger.Errorf("Close db error: %s", err.Error())
+		log.Logger().Errorf("Close db error: %s", err.Error())
 	}
 }
 
-func Init(conf *configs.Config) (*logrus.Logger, error) {
-	logger := log.InitLogger(conf.Log.LogFile, conf.Log.LogLevel, conf.Log.LogFormat, conf.Log.EnableForceColors)
+func Init(conf *configs.Config) error {
+	log.InitLogger(conf.Log.LogFile, conf.Log.LogLevel, conf.Log.LogFormat)
 
 	_, err := model.InitDB(conf.Database)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	_, err = client.NewClients(conf.Client)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return logger, nil
+	return nil
 }
