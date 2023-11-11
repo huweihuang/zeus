@@ -4,11 +4,11 @@
 
 # Feature
 
-- 命令行框架：[cobra](https://github.com/spf13/cobra)
+- 命令行框架：[Cobra](https://github.com/spf13/cobra)
 - Web框架：[Gin](https://github.com/gin-gonic/gin)
-- 日志库：[logrus](https://github.com/sirupsen/logrus)
-- ORM库：[gorm](https://github.com/go-gorm/gorm)
-- 配置：[viper](https://github.com/spf13/viper)
+- 日志库：[Logrus](https://github.com/sirupsen/logrus)
+- ORM库：[Gorm](https://github.com/go-gorm/gorm)
+- 配置：[Viper](https://github.com/spf13/viper)
 
 # Framework
 
