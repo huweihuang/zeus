@@ -1,6 +1,6 @@
 package configs
 
-var GlobalConfig *Config
+var GlobalConfig Config
 
 // Config is general configuration
 type Config struct {
