@@ -6,7 +6,7 @@
 
 - 命令行框架：[Cobra](https://github.com/spf13/cobra)
 - Web框架：[Gin](https://github.com/gin-gonic/gin)
-- 日志库：[Logrus](https://github.com/sirupsen/logrus)
+- 日志库：[Zap](https://github.com/uber-go/zap)
 - ORM库：[Gorm](https://github.com/go-gorm/gorm)
 - 配置：[Viper](https://github.com/spf13/viper)
 

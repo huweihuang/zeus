@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
-	log "github.com/huweihuang/golib/logger/logrus"
+	log "github.com/huweihuang/golib/logger/zap"
 	errConst "github.com/huweihuang/zeus/pkg/errors"
 	"github.com/huweihuang/zeus/pkg/types"
 	"github.com/huweihuang/zeus/pkg/util"
@@ -21,7 +21,7 @@ func (m *DBMng) CreateInstance(ins *types.Instance) error {
 	if err != nil {
 		return err
 	}
-	log.Logger.WithField("[instance]", util.PrintObjectJson(ins)).Debug("create instance in db")
+	log.Logger().With("[instance]", util.PrintObjectJson(ins)).Debug("create instance in db")
 	return nil
 }
 
@@ -35,7 +35,7 @@ func (m *DBMng) GetInstance(hostID, name string) (*types.Instance, error) {
 		return nil, err
 	}
 
-	log.Logger.WithField(
+	log.Logger().With(
 		"[instance]", util.PrintObjectJson(ins),
 	).Debug("get instance from db by host id")
 	return ins, nil
@@ -47,7 +47,7 @@ func (m *DBMng) UpdateInstanceStatus(name string, status bool) error {
 		return fmt.Errorf("failed to update instance status by name, err: %v", err)
 	}
 
-	log.Logger.WithFields(logrus.Fields{
+	log.Logger().With(logrus.Fields{
 		"insName": name, "status": status,
 	}).Info("update instance status in db")
 	return nil
@@ -58,7 +58,7 @@ func (m *DBMng) UpdateInstanceImage(name, image string) error {
 	if err != nil {
 		return fmt.Errorf("failed to update instance image by job_id, err: %v", err)
 	}
-	log.Logger.WithFields(logrus.Fields{"insName": name, "image": image}).Info("update job image in db")
+	log.Logger().With(logrus.Fields{"insName": name, "image": image}).Info("update job image in db")
 	return nil
 }
 
@@ -67,6 +67,6 @@ func (m *DBMng) DeleteInstance(insName string) error {
 	if err != nil {
 		return fmt.Errorf("failed to delete instance in db, err: %v", err)
 	}
-	log.Logger.WithField("[instance]", insName).Debug("delete instance from db")
+	log.Logger().With("[instance]", insName).Debug("delete instance from db")
 	return nil
 }

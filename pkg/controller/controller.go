@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/huweihuang/golib/kube"
-	log "github.com/huweihuang/golib/logger/logrus"
+	log "github.com/huweihuang/golib/logger/zap"
 	"k8s.io/apimachinery/pkg/util/wait"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/util/workqueue"
@@ -49,7 +49,7 @@ func (c *WorkerController) Run(ctx context.Context, workers int) {
 	for i := 0; i < workers; i++ {
 		go wait.Forever(c.worker, time.Second)
 	}
-	log.Logger.Infof("worker controller is running, workers: [%d]", workers)
+	log.Logger().Infof("worker controller is running, workers: [%d]", workers)
 
 	<-ctx.Done()
 }
@@ -61,7 +61,7 @@ func (c *WorkerController) worker() {
 
 func (c *WorkerController) processNextWorkItem() bool {
 	key, quit := c.queue.Get()
-	log.Logger.WithField("key", key).WithField("quit", quit).Debug("processNextWorkItem begin")
+	log.Logger().With("key", key).With("quit", quit).Debug("processNextWorkItem begin")
 	if quit {
 		return false
 	}
@@ -100,13 +100,13 @@ func (c *WorkerController) handleErr(err error, job interface{}) {
 
 	// 没有超过重试次数，则重新入队列
 	if c.queue.NumRequeues(job) < maxRetries {
-		log.Logger.WithError(err).WithField("job", job).Info("Error syncing job")
+		log.Logger().With(err).With("job", job).Info("Error syncing job")
 		c.queue.AddRateLimited(job)
 		return
 	}
 
 	// 超过重试次数则丢弃任务，打印错误日志
-	log.Logger.WithError(err).WithField("job", job).Info("Dropping job out of the queue")
+	log.Logger().With(err).With("job", job).Info("Dropping job out of the queue")
 	c.queue.Forget(job)
 }
 
