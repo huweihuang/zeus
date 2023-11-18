@@ -190,8 +190,8 @@ github.com/hashicorp/golang-lru v0.5.0/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ
 github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ4Ao+sR/qLZy8=
 github.com/hashicorp/hcl v1.0.0 h1:0Anlzjpi4vEasTeNFn2mLJgTSwt0+6sfsiTG8qcWGx4=
 github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T20WEQ=
-github.com/huweihuang/golib v0.0.2-0.20231111084602-db0be2d5ebca h1:OQTMWn6FLOwGMYqyhGOt+U3o/mCJ3UlWREwwNODStS4=
-github.com/huweihuang/golib v0.0.2-0.20231111084602-db0be2d5ebca/go.mod h1:BWK4fQEi1duZXswv4pTDND3wEKJsPvfEwwOmUixEdKg=
+github.com/huweihuang/golib v0.0.2-0.20231118035657-d9cd173163a6 h1:LqtS0baQwwyIeRQts4vb+U2KBKe/qJcs25GWhREga2A=
+github.com/huweihuang/golib v0.0.2-0.20231118035657-d9cd173163a6/go.mod h1:BWK4fQEi1duZXswv4pTDND3wEKJsPvfEwwOmUixEdKg=
 github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/ianlancetaylor/demangle v0.0.0-20200824232613-28f6c0f3b639/go.mod h1:aSSvb/t6k1mPoxDqO4vJh6VOCGPwU4O0C2/Eqndh1Sc=
 github.com/imdario/mergo v0.3.6 h1:xTNEAn+kxVO7dTZGu0CegyqKZmoWFI0rF8UxjlB2d28=

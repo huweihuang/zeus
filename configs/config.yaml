@@ -1,16 +1,17 @@
 server:
   host: "0.0.0.0"
   port: 80
-  cert_file: ""
-  key_file: ""
+  certFile: ""
+  keyFile: ""
 log:
-  log_file: "log/info.log"
-  log_level: "debug"
-  log_format: "text"
-  enable_force_colors: true
+  logFile: "log/info.log"
+  errorFile: "log/error.log"
+  logLevel: "debug"
+  logFormat: "json"
+  enableColor: false
 database:
   user: ""
   password: ""
   addr: ""
-  db_name: ""
-  log_level: ""
+  dbName: ""
+  logLevel: ""

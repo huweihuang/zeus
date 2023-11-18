@@ -100,13 +100,13 @@ func (c *WorkerController) handleErr(err error, job interface{}) {
 
 	// 没有超过重试次数，则重新入队列
 	if c.queue.NumRequeues(job) < maxRetries {
-		log.Logger().With(err).With("job", job).Info("Error syncing job")
+		log.Logger().With("err", err).With("job", job).Info("Error syncing job")
 		c.queue.AddRateLimited(job)
 		return
 	}
 
 	// 超过重试次数则丢弃任务，打印错误日志
-	log.Logger().With(err).With("job", job).Info("Dropping job out of the queue")
+	log.Logger().With("err", err).With("job", job).Info("Dropping job out of the queue")
 	c.queue.Forget(job)
 }
 
