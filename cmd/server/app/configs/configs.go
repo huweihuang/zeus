@@ -1,11 +1,13 @@
 package configs
 
+import "github.com/huweihuang/golib/logger"
+
 var GlobalConfig Config
 
 // Config is general configuration
 type Config struct {
 	Server   *ServerConfig
-	Log      *LogConfig
+	Log      *logger.LogConfig
 	Database *DBConfig
 	Etcd     *EtcdConfig
 	Worker   *WorkConfig
@@ -19,14 +21,6 @@ type ServerConfig struct {
 	Port     int
 	CertFile string
 	KeyFile  string
-}
-
-// LogConfig is config for logger
-type LogConfig struct {
-	LogFile           string
-	LogLevel          string
-	LogFormat         string
-	EnableForceColors bool
 }
 
 // DBConfig is config for db

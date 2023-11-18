@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
@@ -47,9 +46,7 @@ func (m *DBMng) UpdateInstanceStatus(name string, status bool) error {
 		return fmt.Errorf("failed to update instance status by name, err: %v", err)
 	}
 
-	log.Logger().With(logrus.Fields{
-		"insName": name, "status": status,
-	}).Info("update instance status in db")
+	log.Logger().With("insName", name, "status", status).Info("update instance status in db")
 	return nil
 }
 
@@ -58,7 +55,7 @@ func (m *DBMng) UpdateInstanceImage(name, image string) error {
 	if err != nil {
 		return fmt.Errorf("failed to update instance image by job_id, err: %v", err)
 	}
-	log.Logger().With(logrus.Fields{"insName": name, "image": image}).Info("update job image in db")
+	log.Logger().With("insName", name, "image", image).Info("update job image in db")
 	return nil
 }
 

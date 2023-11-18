@@ -58,7 +58,7 @@ func (s *Server) Run() error {
 		go func() {
 			err := server.RunTLS(addr, s.conf.Server.CertFile, s.conf.Server.KeyFile)
 			if err != nil {
-				log.Logger().With(err).Fatal("Failed to start http server")
+				log.Logger().With("err", err).Fatal("Failed to start http server")
 			}
 		}()
 		log.Logger().Infof("Server listening at https://%s", addr)
@@ -66,7 +66,7 @@ func (s *Server) Run() error {
 		go func() {
 			err := server.Run(addr)
 			if err != nil {
-				log.Logger().With(err).Fatal("Failed to start http server")
+				log.Logger().With("err", err).Fatal("Failed to start http server")
 			}
 		}()
 		log.Logger().Infof("Server listening at http://%s", addr)
@@ -101,7 +101,7 @@ func (s *Server) Shutdown() {
 }
 
 func Init(conf *configs.Config) error {
-	log.InitLogger(conf.Log.LogFile, conf.Log.LogLevel, conf.Log.LogFormat)
+	log.InitLogger(conf.Log.LogFile, conf.Log.ErrorFile, conf.Log.LogLevel, conf.Log.LogFormat, conf.Log.EnableColor)
 
 	_, err := model.InitDB(conf.Database)
 	if err != nil {
