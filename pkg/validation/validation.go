@@ -6,20 +6,17 @@ import (
 	"github.com/huweihuang/zeus/pkg/types"
 )
 
-// 校验创建请求
-func ValidateCreateInstance(ins *types.Instance) field.ErrorList {
+func ValidateCreateInstance(ins *types.Instance) error {
 	allErrs := field.ErrorList{}
-	return allErrs
+	return allErrs.ToAggregate()
 }
 
-// 校验更新请求
-func ValidateUpdateInstance(ins *types.Instance) field.ErrorList {
+func ValidateUpdateInstance(ins *types.Instance) error {
 	allErrs := field.ErrorList{}
-	return allErrs
+	return allErrs.ToAggregate()
 }
 
-// 校验删除请求
-func ValidateDeleteInstance(ins *types.Instance) field.ErrorList {
+func ValidateDeleteInstance(ins *types.Instance) error {
 	allErrs := field.ErrorList{}
-	return allErrs
+	return allErrs.ToAggregate()
 }

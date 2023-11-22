@@ -1,9 +1,8 @@
 package handlers
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	ware "github.com/huweihuang/golib/gin/middlewares"
 	log "github.com/huweihuang/golib/logger/zap"
 
 	"github.com/huweihuang/zeus/pkg/types"
@@ -18,13 +17,7 @@ func HandlerMiddleware(c *gin.Context) {
 	log.Logger().Debug("Use HandlerMiddleware")
 	instance := types.Instance{}
 	if err := c.BindJSON(&instance); err != nil {
-		resp := types.Response{
-			Code:    http.StatusBadRequest,
-			Message: "invalid request body",
-			Data:    map[string]interface{}{"error": err},
-		}
-		log.Logger().With("err", err).Warn("Invalid request body")
-		c.JSON(http.StatusBadRequest, resp)
+		ware.BadRequestWrapper(c, err)
 		return
 	}
 	c.Set(instanceReqCtx, instance)

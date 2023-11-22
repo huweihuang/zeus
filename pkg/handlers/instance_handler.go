@@ -22,16 +22,28 @@ func newInstanceHandler() *InstanceHandler {
 	}
 }
 
-// 创建实例
+// CreateInstance godoc
+//
+//	@Summary		Create Instance
+//	@Description	Create Instance.
+//	@Tags			Instance
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body	types.Instance	true	"Request body"
+//	@Produce		json
+//	@Success		200	{object}	types.CreateInstanceResp
+//	@Failure		400	{object}	types.ErrorResp
+//	@Failure		500	{object}	types.ErrorResp
+//	@Router			/api/v1/instance [POST]
 func (h *InstanceHandler) CreateInstance(c *gin.Context) {
 	instance := c.MustGet(instanceReqCtx).(types.Instance)
-	errs := validation.ValidateCreateInstance(&instance)
-	if len(errs) != 0 {
-		ware.ValidateBadRequestWrapper(c, errs)
+	err := validation.ValidateCreateInstance(&instance)
+	if err != nil {
+		ware.BadRequestWrapper(c, err)
 		return
 	}
 
-	err := h.service.CreateInstance(&instance)
+	err = h.service.CreateInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
 			ware.NotFoundWrapper(c, "instance", map[string]interface{}{"error": err.Error()})
@@ -44,16 +56,28 @@ func (h *InstanceHandler) CreateInstance(c *gin.Context) {
 	ware.SucceedWrapper(c, "CreateInstance", data)
 }
 
-// 更新实例
+// UpdateInstance godoc
+//
+//	@Summary		Update Instance
+//	@Description	Update Instance.
+//	@Tags			Instance
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body	types.Instance	true	"Request body"
+//	@Produce		json
+//	@Success		200	{object}	types.CreateInstanceResp
+//	@Failure		400	{object}	types.ErrorResp
+//	@Failure		500	{object}	types.ErrorResp
+//	@Router			/api/v1/instance [PUT]
 func (h *InstanceHandler) UpdateInstance(c *gin.Context) {
 	instance := c.MustGet(instanceReqCtx).(types.Instance)
-	errs := validation.ValidateUpdateInstance(&instance)
-	if len(errs) != 0 {
-		ware.ValidateBadRequestWrapper(c, errs)
+	err := validation.ValidateUpdateInstance(&instance)
+	if err != nil {
+		ware.BadRequestWrapper(c, err)
 		return
 	}
 
-	err := h.service.UpdateInstance(&instance)
+	err = h.service.UpdateInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
 			ware.NotFoundWrapper(c, "instance", map[string]interface{}{"error": err.Error()})
@@ -66,7 +90,19 @@ func (h *InstanceHandler) UpdateInstance(c *gin.Context) {
 	ware.SucceedWrapper(c, "UpdateInstance", data)
 }
 
-// 查询实例任务创建结果
+// GetInstance godoc
+//
+//	@Summary		Get Instance
+//	@Description	Get Instance.
+//	@Tags			Instance
+//	@Accept			json
+//	@Produce		json
+//	@Param			name	query	string	true	"name"
+//	@Produce		json
+//	@Success		200	{object}	types.GetInstanceResp
+//	@Failure		400	{object}	types.ErrorResp
+//	@Failure		500	{object}	types.ErrorResp
+//	@Router			/api/v1/instance [GET]
 func (h *InstanceHandler) GetInstance(c *gin.Context) {
 	name := c.Query("name")
 
@@ -93,16 +129,28 @@ func (h *InstanceHandler) GetInstance(c *gin.Context) {
 	ware.SucceedWrapper(c, "GetInstance", e)
 }
 
-// 删除实例
+// DeleteInstance godoc
+//
+//	@Summary		Delete Instance
+//	@Description	Delete Instance.
+//	@Tags			Instance
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body	types.Instance	true	"Request body"
+//	@Produce		json
+//	@Success		200	{object}	types.CreateInstanceResp
+//	@Failure		400	{object}	types.ErrorResp
+//	@Failure		500	{object}	types.ErrorResp
+//	@Router			/api/v1/instance [DELETE]
 func (h *InstanceHandler) DeleteInstance(c *gin.Context) {
 	instance := c.MustGet(instanceReqCtx).(types.Instance)
-	errs := validation.ValidateDeleteInstance(&instance)
-	if len(errs) != 0 {
-		ware.ValidateBadRequestWrapper(c, errs)
+	err := validation.ValidateDeleteInstance(&instance)
+	if err != nil {
+		ware.BadRequestWrapper(c, err)
 		return
 	}
 
-	err := h.service.DeleteInstance(&instance)
+	err = h.service.DeleteInstance(&instance)
 	if err != nil {
 		if err == errors.ErrInstanceNotFound {
 			ware.NotFoundWrapper(c, "instance", instance)
