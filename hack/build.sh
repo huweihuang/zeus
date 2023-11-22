@@ -4,7 +4,7 @@ set -e
 
 # 应用参数
 APP="zeus"
-BUILD_DIR=./_output
+BUILD_DIR=./bin
 BASE_DIR="github.com/huweihuang/zeus"
 VERSION_PACKAGE="${BASE_DIR}/pkg/version"
 
@@ -22,14 +22,14 @@ GO_LDFLAGS="-X ${VERSION_PACKAGE}.gitVersion=${VERSION} \
 
 # 初始化构建目录
 rm -fr $BUILD_DIR
-mkdir -p "$BUILD_DIR/bin"
+mkdir -p "$BUILD_DIR"
 
 # 构建二进制
 function gobuild () {
     bin=${1}
     echo "Building ${bin} now."
-    CGO_ENABLED=0 GOOS="$TARGET_OS" GOARCH="$TARGET_ARCH" go build -v -ldflags "${GO_LDFLAGS}" \
-        -o $BUILD_DIR/bin/"${bin}" ${BASE_DIR}/cmd/server
+    CGO_ENABLED=0 GOOS="$TARGET_OS" GOARCH="$TARGET_ARCH" go build -ldflags "${GO_LDFLAGS}" \
+        -o $BUILD_DIR/"${bin}" ${BASE_DIR}/cmd/server
     if [[ $? -ne 0 ]]; then
         echo "Failed to build ${bin}"
         exit 1
