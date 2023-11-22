@@ -1,0 +1,234 @@
+definitions:
+  constant.JobState:
+    enum:
+    - Creating
+    - Updating
+    - Deleting
+    - Processing
+    - Succeed
+    - Deleted
+    - Error
+    - Unknown
+    - Timeout
+    - Finished
+    type: string
+    x-enum-varnames:
+    - JobStateCreating
+    - JobStateUpdating
+    - JobStateDeleting
+    - JobStateProcessing
+    - JobStateSucceed
+    - JobStateDeleted
+    - JobStateError
+    - JobStateUnknown
+    - JobStateTimeout
+    - JobStateFinished
+  types.CreateInstanceResp:
+    properties:
+      code:
+        type: integer
+      data:
+        properties:
+          jobId:
+            type: string
+        type: object
+      message:
+        type: string
+    type: object
+  types.ErrorResp:
+    properties:
+      code:
+        type: integer
+      data:
+        properties:
+          error:
+            type: string
+        type: object
+      message:
+        type: string
+    type: object
+  types.GetInstanceResp:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/types.Instance'
+      message:
+        type: string
+    type: object
+  types.Instance:
+    properties:
+      instanceName:
+        type: string
+      jobID:
+        type: string
+      namespace:
+        type: string
+      spec:
+        allOf:
+        - $ref: '#/definitions/types.InstanceSpec'
+        description: Specification of the desired behavior of a Instance.
+      status:
+        allOf:
+        - $ref: '#/definitions/types.InstanceStatus'
+        description: Current status of a Instance
+    required:
+    - instanceName
+    - namespace
+    type: object
+  types.InstanceSpec:
+    properties:
+      hostID:
+        type: string
+      image:
+        type: string
+      keepStorage:
+        type: boolean
+      replicas:
+        type: integer
+      servers:
+        items:
+          type: string
+        maxItems: 30
+        minItems: 1
+        type: array
+        uniqueItems: true
+    required:
+    - image
+    - servers
+    type: object
+  types.InstanceStatus:
+    properties:
+      createdTime:
+        type: string
+      jobState:
+        $ref: '#/definitions/constant.JobState'
+      modifyTime:
+        type: string
+      status:
+        type: boolean
+    type: object
+info:
+  contact: {}
+paths:
+  /api/v1/instance:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Instance.
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.Instance'
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.CreateInstanceResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/types.ErrorResp'
+      summary: Delete Instance
+      tags:
+      - Instance
+    get:
+      consumes:
+      - application/json
+      description: Get Instance.
+      parameters:
+      - description: name
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.GetInstanceResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/types.ErrorResp'
+      summary: Get Instance
+      tags:
+      - Instance
+    post:
+      consumes:
+      - application/json
+      description: Create Instance.
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.Instance'
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.CreateInstanceResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/types.ErrorResp'
+      summary: Create Instance
+      tags:
+      - Instance
+    put:
+      consumes:
+      - application/json
+      description: Update Instance.
+      parameters:
+      - description: Request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/types.Instance'
+      produces:
+      - application/json
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.CreateInstanceResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/types.ErrorResp'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/types.ErrorResp'
+      summary: Update Instance
+      tags:
+      - Instance
+swagger: "2.0"
