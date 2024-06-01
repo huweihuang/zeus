@@ -49,15 +49,14 @@ clean: ## Clean binary
 	-rm -Rf bin
 
 .PHONY: swag
-swag: download
+swag: ## generate swagger json
 	swag fmt
 	swag init -g ./pkg/server/router.go
 
 ##@ Build Dependencies
 
-.PHONY: download
-download:  ## Download dependencies
-	go get github.com/swaggo/swag/cmd/swag@v1.8.8
+install-swag: ## install swag
+	go install github.com/swaggo/swag/cmd/swag@latest
 
 GOLANGCI_LINT = $(shell pwd)/bin/golangci-lint
 GOLANGCI_LINT_VERSION ?= v1.54.2

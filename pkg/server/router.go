@@ -9,11 +9,15 @@ import (
 	"github.com/huweihuang/zeus/pkg/handlers"
 )
 
+// @title			Swagger Zeus API
+// @version		1.0
+// @description	This is a zeus server.
+// @BasePath		/api/zeus/v1
 func (s *Server) setupRoutes() {
 	// http://127.0.0.1/swagger/index.html
 	s.gin.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	group := s.gin.Group("/api/v1")
+	group := s.gin.Group("/api/zeus/v1")
 	handler := handlers.New()
 	// instance
 	group.POST("/instance", handlers.HandlerMiddleware, handler.CreateInstance)
